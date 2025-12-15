@@ -3,7 +3,10 @@ module com.gradeapp.grade_app {
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
+    requires java.dotenv;
+    requires java.sql;
 
     opens com.gradeapp.grade_app to javafx.fxml;
+    opens com.gradeapp.grade_app.controllers to javafx.fxml;
     exports com.gradeapp.grade_app;
 }
