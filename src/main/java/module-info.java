@@ -6,7 +6,7 @@ module com.gradeapp.grade_app {
     requires java.dotenv;
     requires java.sql;
 
-    opens com.gradeapp.grade_app to javafx.fxml;
-    opens com.gradeapp.grade_app.controllers to javafx.fxml;
-    exports com.gradeapp.grade_app;
+    opens com.grade_app to javafx.fxml;
+    opens com.grade_app.controllers to javafx.fxml;
+    exports com.grade_app;
 }
