@@ -1,4 +1,4 @@
-package com.gradeapp.grade_app.services;
+package com.grade_app.services;
 
 import java.sql.Connection;
 

@@ -1,4 +1,4 @@
-package com.gradeapp.grade_app;
+package com.grade_app;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -24,8 +24,8 @@ public class GradeApp extends Application {
         stage.show();
     }
 
-    private static Parent loadFxml(String role) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(GradeApp.class.getResource("/com/gradeapp/grade_app/ui/" + role + ".fxml"));
+    private static Parent loadFxml(String scene) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(GradeApp.class.getResource("/com/ui/" + scene + ".fxml"));
 
         return fxmlLoader.load();
     }

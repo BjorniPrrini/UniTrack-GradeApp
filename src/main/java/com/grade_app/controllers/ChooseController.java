@@ -1,6 +1,6 @@
-package com.gradeapp.grade_app.controllers;
+package com.grade_app.controllers;
 
-import com.gradeapp.grade_app.GradeApp;
+import com.grade_app.GradeApp;
 import javafx.fxml.FXML;
 
 import java.io.IOException;

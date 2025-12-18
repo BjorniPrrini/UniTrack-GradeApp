@@ -92,7 +92,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.gradeapp.grade_app/com.gradeapp.grade_app.GradeApp</mainClass>
+                            <mainClass>com.grade_app.GradeApp</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
