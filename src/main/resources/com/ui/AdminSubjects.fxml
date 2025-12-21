@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox fx:id="subjectCenterVbox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ComboBox fx:id="coursesComboBox" prefHeight="34.0" prefWidth="401.0" promptText="Courses">
+         <VBox.margin>
+            <Insets top="50.0" />
+         </VBox.margin>
+      </ComboBox>
+      <ComboBox fx:id="subjectComboBox" prefHeight="34.0" prefWidth="399.0" promptText="Subject" />
+      <AnchorPane maxWidth="-Infinity" prefHeight="270.0" prefWidth="794.0">
+         <children>
+            <CheckBox fx:id="finalCheckBox" layoutX="289.0" layoutY="92.0" mnemonicParsing="false" text="FINAL " />
+            <CheckBox fx:id="quizCheckBox" layoutX="289.0" layoutY="142.0" mnemonicParsing="false" text="QUIZ" />
+            <CheckBox fx:id="midtermCheckBox" layoutX="289.0" layoutY="47.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="90.0" text="MIDTERM" />
+            <CheckBox fx:id="homeworkCheckBox" layoutX="289.0" layoutY="192.0" mnemonicParsing="false" text="HOMEWORK" />
+            <CheckBox fx:id="projectCheckBox" layoutX="289.0" layoutY="240.0" mnemonicParsing="false" text="PROJECT" />
+            <TextField fx:id="midtermField" layoutX="407.0" layoutY="43.0" prefHeight="26.0" prefWidth="90.0" promptText="\%" />
+            <TextField fx:id="finalField" layoutX="407.0" layoutY="88.0" prefHeight="26.0" prefWidth="90.0" promptText="\%" />
+            <TextField fx:id="quizField" layoutX="407.0" layoutY="138.0" prefHeight="26.0" prefWidth="90.0" promptText="\%" />
+            <TextField fx:id="homeworkField" layoutX="407.0" layoutY="188.0" prefHeight="26.0" prefWidth="90.0" promptText="\%" />
+            <TextField fx:id="projectField" layoutX="407.0" layoutY="236.0" prefHeight="26.0" prefWidth="90.0" promptText="\%" />
+         </children>
+      </AnchorPane>
+      <HBox alignment="CENTER" prefHeight="61.0" prefWidth="1000.0" spacing="150.0">
+         <children>
+            <Label fx:id="totalAssignedLabel" text="Total Assigned:">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <Label fx:id="remainingLabel" text="Remaining:">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="37.0" prefWidth="390.0" text="Submit" />
+   </children>
+</VBox>

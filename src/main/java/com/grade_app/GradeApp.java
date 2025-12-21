@@ -17,10 +17,11 @@ public class GradeApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        scene = new Scene(loadFxml("Role"));
+        scene = new Scene(loadFxml("LogInPage"));
+
         stage.setScene(scene);
-        stage.setTitle("GradeApp");
-        stage.setMaximized(true);
+        stage.setTitle("UniTrack");
+        stage.setMaximized(false);
         stage.show();
     }
 
@@ -32,5 +33,7 @@ public class GradeApp extends Application {
 
     public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFxml(fxml));
+        Stage stage = (Stage) scene.getWindow();
+        stage.sizeToScene();
     }
 }

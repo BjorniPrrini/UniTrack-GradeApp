@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="adminBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grade_app.controllers.AdminController">
+   <left>
+      <AnchorPane fx:id="adminAnchorPane" prefHeight="600.0" prefWidth="242.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="187.0" fitWidth="176.0" layoutX="33.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@/logo.png" />
+               </image></ImageView>
+            <Button fx:id="insertButton" layoutY="239.0" mnemonicParsing="false" onAction="#adminInsert" prefHeight="49.0" prefWidth="241.0" text="INSERT" />
+            <Button fx:id="deleteButton" layoutX="-2.0" layoutY="287.0" mnemonicParsing="false" onAction="#adminDelete" prefHeight="46.0" prefWidth="244.0" text="DELETE" />
+            <Button fx:id="assignButton" layoutY="333.0" mnemonicParsing="false" onAction="#adminAssign" prefHeight="48.0" prefWidth="242.0" text="ASSIGN/DELETE" />
+            <Button fx:id="logOutButton" layoutX="-1.0" layoutY="542.0" mnemonicParsing="false" onAction="#logOut" prefHeight="42.0" prefWidth="243.0" text="LOG OUT" />
+            <Button fx:id="subjectButton" layoutY="381.0" mnemonicParsing="false" onAction="#adminSubject" prefHeight="49.0" prefWidth="241.0" text="SUBJECT" />
+         </children>
+      </AnchorPane>
+   </left>
+   <center>
+      <VBox fx:id="adminVboxCenter" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="nameField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="37.0" prefWidth="385.0" promptText="Name" />
+            <TextField fx:id="surnameField" maxWidth="-Infinity" prefHeight="38.0" prefWidth="389.0" promptText="Surname" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <ComboBox fx:id="roleComboBox" prefWidth="150.0" promptText="Role" />
+                  <ComboBox fx:id="courseComboBox" prefWidth="150.0" promptText="Course" />
+                  <ComboBox fx:id="yearComboBox" prefWidth="150.0" promptText="Year" />
+               </children>
+            </HBox>
+            <TextField fx:id="generatedEmailField" maxWidth="-Infinity" prefHeight="40.0" prefWidth="394.0" promptText="Generated Email" />
+            <PasswordField fx:id="generatedPasswordField" maxWidth="-Infinity" prefHeight="40.0" prefWidth="394.0" promptText="Generated Password" />
+            <Button fx:id="generateButton" mnemonicParsing="false" prefHeight="41.0" prefWidth="393.0" text="Generate Email/Password" />
+            <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="41.0" prefWidth="117.0" text="Save">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
