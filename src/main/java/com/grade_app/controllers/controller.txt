@@ -1,1 +1,0 @@
-ktu do jen controllerat per backendin e cdo .fxml

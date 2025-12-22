@@ -1,22 +1,22 @@
 package com.grade_app.services;
 
 import io.github.cdimascio.dotenv.Dotenv;
-
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionProvider {
-    private static ConnectionProvider connection;
+    private static Connection connection;
 
-    public static ConnectionProvider getConnection() throws SQLException {
-        if(connection == null){
+    public static Connection getConnection() throws SQLException {
+        if (connection == null) {
             Dotenv dotenv = Dotenv.load();
 
             String url = dotenv.get("DB_URL");
             String user = dotenv.get("DB_USER");
             String pass = dotenv.get("DB_PASS");
 
-            connection = (ConnectionProvider) DriverManager.getConnection(url,user,pass);
+            connection = DriverManager.getConnection(url, user, pass);
         }
 
         return connection;

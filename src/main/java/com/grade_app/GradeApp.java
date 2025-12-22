@@ -18,7 +18,6 @@ public class GradeApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         scene = new Scene(loadFxml("LogInPage"));
-
         stage.setScene(scene);
         stage.setTitle("UniTrack");
         stage.setMaximized(false);

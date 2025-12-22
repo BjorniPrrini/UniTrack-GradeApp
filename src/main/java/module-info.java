@@ -5,6 +5,7 @@ module com.gradeapp.grade_app {
     requires org.controlsfx.controls;
     requires java.dotenv;
     requires java.sql;
+    requires jbcrypt;
 
     opens com.grade_app to javafx.fxml;
     opens com.grade_app.controllers to javafx.fxml;
