@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 
 import java.io.IOException;
 
-public class AdminInsertController {
+public class AdminRegisterController {
     @FXML
     private Button insertButton;
 

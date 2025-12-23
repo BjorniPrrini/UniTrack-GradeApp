@@ -54,11 +54,11 @@ public class LoginController {
                 }else if(user.getRole().equals("teacher")){
                     showSuccessAlert("Login Successful", "You have successfully logged in!");
 
-                    GradeApp.setRoot("TeacherHomePage");
+                    GradeApp.setRoot("TeacherGrades");
                 }else if(user.getRole().equals("student")){
                     showSuccessAlert("Login Successful", "You have successfully logged in!");
 
-                    GradeApp.setRoot("StudentHomePage");
+                    GradeApp.setRoot("StudentGrades");
                 }
             }else{
                 showAlert("Login Failed", "Invalid username or password!");
