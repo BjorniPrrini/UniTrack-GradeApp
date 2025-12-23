@@ -1,0 +1,70 @@
+.root {
+    -fx-background-color: #f4f6f8;
+}
+
+#assignCenterVbox {
+    -fx-background-color: linear-gradient(to bottom, #ffffff 0%, #eef1ff 100%);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+}
+
+#teacherNameField,
+#teacherSurnameField {
+    -fx-background-color: white;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 14px;
+}
+
+#teacherNameField:focused,
+#teacherSurnameField:focused {
+    -fx-border-color: #D8A55B;
+}
+
+#subjectComboBox {
+    -fx-background-color: white;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 14px;
+}
+
+#subjectComboBox .arrow-button {
+    -fx-background-color: #D8A55B;
+    -fx-background-radius: 0 6 6 0;
+}
+
+#subjectComboBox .arrow {
+    -fx-background-color: white;
+}
+
+#subjectComboBox:hover .arrow-button {
+    -fx-background-color: #D8A55B;
+}
+
+Button {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+}
+
+#loadSubjectButton {
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+}
+
+#loadSubjectButton:hover {
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+}
+
+#submitButton {
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+}
+
+#submitButton:hover {
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+}
+
+

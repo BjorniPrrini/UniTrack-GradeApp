@@ -1,0 +1,97 @@
+.root {
+    -fx-background-color: #f4f6f8;
+}
+
+#subjectCenterVbox {
+    -fx-background-color: linear-gradient(to bottom, #ffffff 0%, #eef1ff 100%);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+}
+
+#coursesComboBox,
+#subjectComboBox {
+    -fx-background-color: white;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 14px;
+}
+
+#coursesComboBox .arrow-button,
+#subjectComboBox .arrow-button {
+    -fx-background-color: #D8A55B;
+    -fx-background-radius: 0 6 6 0;
+}
+
+#coursesComboBox .arrow,
+#subjectComboBox .arrow {
+    -fx-background-color: white;
+}
+
+#coursesComboBox:hover .arrow-button,
+#subjectComboBox:hover .arrow-button {
+    -fx-background-color: #D8A55B;
+}
+
+CheckBox {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+CheckBox:selected .box {
+    -fx-background-color: #4CAF50;
+}
+
+CheckBox:selected .mark {
+    -fx-background-color: white;
+}
+
+#midtermField,
+#finalField,
+#quizField,
+#homeworkField,
+#projectField {
+    -fx-background-color: white;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 13px;
+}
+
+#midtermField:focused,
+#finalField:focused,
+#quizField:focused,
+#homeworkField:focused,
+#projectField:focused {
+    -fx-border-color: #D8A55B;
+}
+
+Label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+#submitButton {
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+#submitButton:hover {
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+}
+Label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #c0875c;
+    -fx-background-color: #E3F2FD; /* light blue background */
+    -fx-background-radius: 6;       /* rounded corners */
+    -fx-border-radius: 6;           /* match corners */
+    -fx-border-color: #D8A55B;      /* subtle border */
+    -fx-border-width: 1;
+    -fx-padding: 3 8;               /* small padding inside label */
+}
+
+
+
