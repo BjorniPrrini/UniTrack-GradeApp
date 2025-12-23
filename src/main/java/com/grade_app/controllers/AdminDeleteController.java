@@ -3,10 +3,26 @@ package com.grade_app.controllers;
 import com.grade_app.GradeApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 
 import java.io.IOException;
 
 public class AdminDeleteController {
+    @FXML
+    private Button insertButton;
+
+    @FXML
+    private Button deleteButton;
+
+    @FXML
+    private Button assignButton;
+
+    @FXML
+    private Button logOutButton;
+
+    @FXML
+    private Button subjectButton;
+
     @FXML
     public void adminRegister() throws IOException {
         GradeApp.setRoot("AdminRegister");
@@ -30,5 +46,14 @@ public class AdminDeleteController {
     @FXML
     public void logOut(ActionEvent actionEvent) throws IOException {
         GradeApp.setRoot("LogInPage");
+    }
+
+    @FXML
+    public void initialize() {
+        insertButton.setFocusTraversable(false);
+        deleteButton.setFocusTraversable(true);
+        assignButton.setFocusTraversable(false);
+        logOutButton.setFocusTraversable(false);
+        subjectButton.setFocusTraversable(false);
     }
 }

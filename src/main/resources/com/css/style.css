@@ -37,3 +37,8 @@
 .password-field:focused {
     -fx-border-color: #2f80ed;
 }
+
+.button:focused {
+    -fx-focus-color: #ff5100;   /* your desired color, e.g., red */
+    -fx-faint-focus-color: rgba(255, 77, 0, 0.76); /* translucent glow */
+}
