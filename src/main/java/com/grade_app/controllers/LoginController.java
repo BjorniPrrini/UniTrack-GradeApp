@@ -50,7 +50,7 @@ public class LoginController {
                 if(user.getRole().equals("admin")) {
                     showSuccessAlert("Login Successful", "You have successfully logged in!");
 
-                    GradeApp.setRoot("AdminHomePage");
+                    GradeApp.setRoot("AdminRegister");
                 }else if(user.getRole().equals("teacher")){
                     showSuccessAlert("Login Successful", "You have successfully logged in!");
 

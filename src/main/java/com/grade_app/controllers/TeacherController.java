@@ -15,18 +15,21 @@ import java.util.Optional;
 public class TeacherController {
     @FXML
     private BorderPane rootBorderPane;
+
     @FXML
     private VBox centerVbox;
 
     @FXML
     public void openProfile() throws IOException{
-            Parent profileView = FXMLLoader.load(getClass().getResource("/com/ui/TeacherProfile.fxml"));
-            rootBorderPane.setCenter(profileView);
+        Parent profileView = FXMLLoader.load(getClass().getResource("/com/ui/TeacherProfile.fxml"));
+
+        rootBorderPane.setCenter(profileView);
     }
     @FXML
     public void openHome() throws  IOException{
         rootBorderPane.setCenter(centerVbox);
     }
+
     @FXML
     public void logOut() throws  IOException{
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

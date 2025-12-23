@@ -1,43 +1,37 @@
-/* Root BorderPane background */
 .root {
-    -fx-background-color: #f5f5f5; /* main window background */
+    -fx-background-color: #f5f5f5;
 }
 
-/* Left AnchorPane: white top behind logo, gold bottom */
 #leftTeacherVbox {
     -fx-background-color: linear-gradient(to bottom, white 0%, white 220px, #D8A55B 220px, #D8A55B 100%);
-    -fx-padding: 0; /* no extra padding */
+    -fx-padding: 0;
 }
 
-/* Left panel buttons: gold border with rounded corners, fill on hover */
 #leftTeacherVbox Button {
-    -fx-background-color: transparent; /* transparent fill by default */
+    -fx-background-color: transparent;
     -fx-text-fill: black;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-alignment: CENTER;
-    -fx-border-width: 2; /* border thickness */
-    -fx-border-color: #D8A55B; /* gold border */
-    -fx-border-radius: 10; /* rounded corners */
-    -fx-background-radius: 10; /* matches hover fill corners */
+    -fx-border-width: 2;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
     -fx-padding: 12 0;
     -fx-transition: all 0.2s ease;
 }
 
-/* Hover effect: gold fill with rounded corners */
 #leftTeacherVbox Button:hover {
-    -fx-background-color: #D8A55B; /* gold fill */
+    -fx-background-color: #D8A55B;
     -fx-text-fill: black;
 }
 
-/* Active button style: filled with gold */
 #leftTeacherVbox Button.active-button {
     -fx-background-color: #D8A55B;
     -fx-text-fill: black;
 }
 
-/* Log out button: same style as other buttons */
 #logOutButton {
     -fx-background-color: transparent;
     -fx-border-width: 2;
@@ -50,7 +44,6 @@
     -fx-text-fill: black;
 }
 
-/* Center VBox styling */
 #centerVbox {
     -fx-background-color: white;
     -fx-padding: 20;
@@ -60,7 +53,6 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);
 }
 
-/* HBox inside center (search area) */
 #centerVbox HBox {
     -fx-spacing: 10;
 }
@@ -74,7 +66,6 @@
     -fx-font-size: 13px;
 }
 
-/* Search Button */
 #centerVbox Button {
     -fx-background-color: #D8A55B;
     -fx-text-fill: white;
@@ -86,7 +77,6 @@
     -fx-background-color: #c48b4b;
 }
 
-/* TableView styling */
 #studentInfoTable {
     -fx-background-color: #ffffff;
     -fx-border-color: #e0e0e0;
@@ -102,19 +92,16 @@
     -fx-alignment: CENTER_LEFT;
 }
 
-/* Table columns text alignment */
 #studentIdColumn, #studentNameColumn, #studentSurnameColumn {
     -fx-alignment: CENTER_LEFT;
 }
 
-/* Label styling */
 #centerVbox Label {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
 }
 
-/* Right AnchorPane same color as left panel bottom */
 #rightTeacher {
     -fx-background-color: #D8A55B;
 }

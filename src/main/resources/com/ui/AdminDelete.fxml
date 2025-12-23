@@ -6,26 +6,50 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="700.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="294.0" promptText="Enter name..." />
-      <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="293.0" promptText="Enter surname...." />
-      <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="176.0" text="Search">
-         <VBox.margin>
-            <Insets bottom="30.0" />
-         </VBox.margin></Button>
-      <TableView maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="616.0">
-        <columns>
-          <TableColumn prefWidth="142.0" text="Name" />
-          <TableColumn prefWidth="138.0" text="Surname" />
-            <TableColumn prefWidth="180.0" text="Email" />
-            <TableColumn prefWidth="155.0" text="Role" />
-        </columns>
-      </TableView>
-      <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="186.0" text="Delete">
-         <VBox.margin>
-            <Insets top="30.0" />
-         </VBox.margin></Button>
-   </children>
-</VBox>
+<BorderPane fx:id="adminBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grade_app.controllers.AdminDeleteController">
+    <left>
+        <AnchorPane fx:id="adminAnchorPane" prefHeight="600.0" prefWidth="242.0" BorderPane.alignment="CENTER">
+            <children>
+                <ImageView fitHeight="187.0" fitWidth="176.0" layoutX="33.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/logo.png" />
+                    </image>
+                </ImageView>
+                <Button fx:id="insertButton" layoutY="239.0" mnemonicParsing="false" onAction="#adminRegister" prefHeight="49.0" prefWidth="241.0" text="INSERT" />
+                <Button fx:id="deleteButton" layoutX="-2.0" layoutY="287.0" mnemonicParsing="false" onAction="#adminDelete" prefHeight="46.0" prefWidth="244.0" text="DELETE" />
+                <Button fx:id="assignButton" layoutY="333.0" mnemonicParsing="false" onAction="#adminAssign" prefHeight="48.0" prefWidth="242.0" text="ASSIGN/DELETE" />
+                <Button fx:id="logOutButton" layoutX="-1.0" layoutY="542.0" mnemonicParsing="false" onAction="#logOut" prefHeight="42.0" prefWidth="243.0" text="LOG OUT" />
+                <Button fx:id="subjectButton" layoutY="381.0" mnemonicParsing="false" onAction="#adminSubject" prefHeight="49.0" prefWidth="241.0" text="SUBJECT" />
+            </children>
+        </AnchorPane>
+    </left>
+    <center>
+        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="700.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+            <children>
+                <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="294.0" promptText="Enter name..." />
+                <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="293.0" promptText="Enter surname...." />
+                <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="176.0" text="Search">
+                    <VBox.margin>
+                        <Insets bottom="30.0" />
+                    </VBox.margin></Button>
+                <TableView maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="616.0">
+                    <columns>
+                        <TableColumn prefWidth="142.0" text="Name" />
+                        <TableColumn prefWidth="138.0" text="Surname" />
+                        <TableColumn prefWidth="180.0" text="Email" />
+                        <TableColumn prefWidth="155.0" text="Role" />
+                    </columns>
+                </TableView>
+                <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="186.0" text="Delete">
+                    <VBox.margin>
+                        <Insets top="30.0" />
+                    </VBox.margin></Button>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>
