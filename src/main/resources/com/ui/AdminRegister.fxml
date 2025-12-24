@@ -38,13 +38,14 @@
                <children>
                   <ComboBox fx:id="roleComboBox" prefWidth="150.0" promptText="Role" />
                   <ComboBox fx:id="courseComboBox" prefWidth="150.0" promptText="Course" />
+                  <ComboBox fx:id="subjectsComboBox" prefWidth="150.0" promptText="Subject" />
                   <ComboBox fx:id="yearComboBox" prefWidth="150.0" promptText="Year" />
                </children>
             </HBox>
             <TextField fx:id="generatedEmailField" maxWidth="-Infinity" prefHeight="40.0" prefWidth="394.0" promptText="Generated Email" />
-            <PasswordField fx:id="generatedPasswordField" maxWidth="-Infinity" prefHeight="40.0" prefWidth="394.0" promptText="Generated Password" />
-            <Button fx:id="generateButton" mnemonicParsing="false" prefHeight="41.0" prefWidth="393.0" text="Generate Email/Password" />
-            <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="41.0" prefWidth="117.0" text="Save">
+            <TextField fx:id="generatedPasswordField" maxWidth="-Infinity" prefHeight="40.0" prefWidth="394.0" promptText="Generated Password" />
+            <Button fx:id="generateButton" onAction="#generateEmailAndPassword" mnemonicParsing="false" prefHeight="41.0" prefWidth="393.0" text="Generate Email/Password" />
+            <Button fx:id="registerButton" onAction="#register" mnemonicParsing="false" prefHeight="41.0" prefWidth="117.0" text="Register">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>

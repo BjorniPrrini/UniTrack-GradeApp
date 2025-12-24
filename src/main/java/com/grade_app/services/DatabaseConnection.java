@@ -1,5 +1,7 @@
 package com.grade_app.services;
 
+import com.grade_app.model.Course;
+import com.grade_app.model.Subject;
 import com.grade_app.model.User;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -7,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseConnection {
     private final Connection connection;
@@ -52,5 +56,143 @@ public class DatabaseConnection {
         }
 
         return null;
+    }
+
+    public List<Course> getCourses(){
+        List<Course> courses = new ArrayList<>();
+
+        String sql = "SELECT courseID, courseName FROM Courses";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet result = statement.executeQuery();
+
+            while(result.next()){
+                courses.add(new Course(result.getInt("courseID"), result.getString("courseName")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return courses;
+    }
+
+    public List<Subject> getSubjects(int courseID){
+        List<Subject> subjects = new ArrayList<>();
+
+        String sql = "SELECT Subjects.subjectID, Subjects.subjectName, Subjects.credits FROM Subjects, Course_Subjects WHERE Subjects.subjectID = Course_Subjects.subjectID AND Course_Subjects.courseID = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, courseID);
+
+            try (ResultSet result = statement.executeQuery()) {
+                while(result.next()){
+                    subjects.add(new Subject(result.getInt("subjectID"), result.getString("subjectName"), result.getInt("credits")));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return subjects;
+    }
+
+    public boolean adminRegister(String name, String surname, String email, String password, String role, int year, Course course, Subject subject){
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        switch (role) {
+            case "admin" -> {
+                String sql = "INSERT INTO Users(name, surname, email, password, role) Values(?, ?, ?, ?, ?)";
+
+                try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                    statement.setString(1, name);
+                    statement.setString(2, surname);
+                    statement.setString(3, email);
+                    statement.setString(4, hashedPassword);
+                    statement.setString(5, role);
+
+                    int success = statement.executeUpdate();
+
+                    return success > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+
+                    return false;
+                }
+            }
+            case "teacher" -> {
+                String sql1 = "INSERT INTO Users(name, surname, email, password, role) Values(?, ?, ?, ?, ?)";
+
+                try (PreparedStatement statement1 = connection.prepareStatement(sql1)) {
+                    statement1.setString(1, name);
+                    statement1.setString(2, surname);
+                    statement1.setString(3, email);
+                    statement1.setString(4, hashedPassword);
+                    statement1.setString(5, role);
+
+                    int successful = statement1.executeUpdate();
+
+                    if(successful > 0){
+                        ResultSet generatedKeys = statement1.getGeneratedKeys();
+
+                        if(generatedKeys.next()) {
+                            int teacherID = generatedKeys.getInt(1);
+
+                            String sql2 = "INSERT INTO Teacher_Subject(teacherID, subjectID, courseID) VALUES(?, ?, ?)";
+
+                            try (PreparedStatement statement2 = connection.prepareStatement(sql2)) {
+                                statement2.setInt(1, teacherID);
+                                statement2.setInt(2, subject.getId());
+                                statement2.setInt(3, course.getId());
+
+                                statement2.executeUpdate();
+                            }
+                        }
+                    }
+
+                    return successful > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+
+                    return false;
+                }
+            }
+            case "student" -> {
+                String sql1 = "INSERT INTO Users(name, surname, email, password, role, year) VALUES(?, ?, ?, ?, ?, ?)";
+
+                try (PreparedStatement statement1 = connection.prepareStatement(sql1)) {
+                    statement1.setString(1, name);
+                    statement1.setString(2, surname);
+                    statement1.setString(3, email);
+                    statement1.setString(4, hashedPassword);
+                    statement1.setString(5, role);
+
+                    int successful = statement1.executeUpdate();
+
+                    if(successful > 0){
+                        ResultSet generatedKeys = statement1.getGeneratedKeys();
+
+                        if(generatedKeys.next()){
+                            int studentID = generatedKeys.getInt(1);
+
+                            String sql2 = "INSERT INTO Grades (studentID, subjectID, subjectAssessmentID, gradeValue) SELECT ?, cs.subjectID, sa.subjectAssessmentID, 0 FROM Course_Subjects cs, Subject_Assessments sa WHERE cs.courseID = ? AND cs.subjectYear = ? AND sa.subjectID = cs.subjectID";
+
+                            try (PreparedStatement statement2 = connection.prepareStatement(sql2)) {
+                                statement2.setInt(1, studentID);
+                                statement2.setInt(2, course.getId());
+                                statement2.setInt(3, year);
+
+                                statement2.executeUpdate();
+                            }
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+
+                    return false;
+                }
+            }
+        }
+
+        return false;
     }
 }
