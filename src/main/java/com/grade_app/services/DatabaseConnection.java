@@ -1,6 +1,7 @@
 package com.grade_app.services;
 
 import com.grade_app.model.Course;
+import com.grade_app.model.Student;
 import com.grade_app.model.Subject;
 import com.grade_app.model.User;
 import org.mindrot.jbcrypt.BCrypt;
@@ -41,14 +42,26 @@ public class DatabaseConnection {
 
     public User getUser(String email) {
 
-        String sql = "SELECT userID, name, surname, email, role FROM Users WHERE email = ?";
+        String sql = "SELECT userID, name, surname, email, role, year FROM Users WHERE email = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
 
             try (ResultSet result = statement.executeQuery()) {
                 if (result.next()) {
-                    return new User(result.getInt("userID"), result.getString("name"), result.getString("surname"), result.getString("email"), result.getString("role"));
+                    int userID = result.getInt("userID");
+                    String name = result.getString("name");
+                    String surname = result.getString("surname");
+                    String emailDB = result.getString("email");
+                    String role = result.getString("role");
+
+                    if(role.equals("student")){
+                        int year = result.getInt("year");
+
+                        return new Student(userID, name, surname, emailDB, role, year);
+                    }else{
+                        return new User(userID, name, surname, emailDB, role);
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -122,7 +135,7 @@ public class DatabaseConnection {
             case "teacher" -> {
                 String sql1 = "INSERT INTO Users(name, surname, email, password, role) Values(?, ?, ?, ?, ?)";
 
-                try (PreparedStatement statement1 = connection.prepareStatement(sql1)) {
+                try (PreparedStatement statement1 = connection.prepareStatement(sql1, PreparedStatement.RETURN_GENERATED_KEYS)) {
                     statement1.setString(1, name);
                     statement1.setString(2, surname);
                     statement1.setString(3, email);
@@ -159,12 +172,13 @@ public class DatabaseConnection {
             case "student" -> {
                 String sql1 = "INSERT INTO Users(name, surname, email, password, role, year) VALUES(?, ?, ?, ?, ?, ?)";
 
-                try (PreparedStatement statement1 = connection.prepareStatement(sql1)) {
+                try (PreparedStatement statement1 = connection.prepareStatement(sql1, PreparedStatement.RETURN_GENERATED_KEYS)) {
                     statement1.setString(1, name);
                     statement1.setString(2, surname);
                     statement1.setString(3, email);
                     statement1.setString(4, hashedPassword);
                     statement1.setString(5, role);
+                    statement1.setInt(6,year);
 
                     int successful = statement1.executeUpdate();
 
@@ -185,6 +199,8 @@ public class DatabaseConnection {
                             }
                         }
                     }
+
+                    return successful > 0;
                 } catch (SQLException e) {
                     e.printStackTrace();
 
