@@ -196,7 +196,7 @@ public class DatabaseConnection {
                                 statement2.executeUpdate();
                             }
 
-                            String sql3 = "INSERT INTO Grades (studentID, subjectID, subjectAssessmentID, gradeValue) SELECT ?, cs.subjectID, sa.subjectAssessmentID, 0 FROM Course_Subjects cs, Subject_Assessments sa WHERE cs.courseID = ? AND cs.subjectYear = ? AND sa.subjectID = cs.subjectID";
+                            String sql3 = "INSERT INTO Grades (studentID, subjectID, subjectAssessmentID, gradeValue) SELECT ?, Course_Subjects.subjectID, Course_Subjects.subjectAssessmentID, 0 FROM Course_Subjects, Subject_Assessments WHERE Course_Subjects.courseID = ? AND Course_Subjects.subjectYear = ? AND Subject_Assessments.subjectID = Course_Subjects.subjectID";
 
                             try (PreparedStatement statement3 = connection.prepareStatement(sql3)) {
                                 statement3.setInt(1, studentID);
@@ -289,6 +289,6 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
 
-        return " ";
+        return "";
     }
 }

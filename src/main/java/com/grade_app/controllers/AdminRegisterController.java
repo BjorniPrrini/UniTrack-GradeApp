@@ -84,7 +84,9 @@ public class AdminRegisterController {
         alert.setTitle("Logout Confirmation");
         alert.setHeaderText(null);
         alert.setContentText("ARE YOU SURE YOU WANT TO LOG OUT?");
+
         Optional<ButtonType> result = alert.showAndWait();
+
         if (result.isPresent() && result.get() == ButtonType.OK) {
             GradeApp.setRoot("LogInPage");
         }
@@ -181,7 +183,15 @@ public class AdminRegisterController {
         String email = generatedEmailField.getText();
         String password = generatedPasswordField.getText();
         String role = roleComboBox.getValue();
-        Integer year = yearComboBox.getValue();
+
+        Integer year;
+
+        if(role.equals("student")){
+            year = yearComboBox.getValue();
+        }else{
+            year = 0;
+        }
+
         Course course = courseComboBox.getValue();
         Subject subject = subjectsComboBox.getValue();
 

@@ -50,18 +50,22 @@ public class LoginController {
 
                 LoginUser.setUser(user);
 
-                if(user.getRole().equals("admin")) {
-                    showSuccessAlert("Login Successful", "You have successfully logged in!");
+                switch (user.getRole()) {
+                    case "admin" -> {
+                        showSuccessAlert("Login Successful", "You have successfully logged in!");
 
-                    GradeApp.setRoot("AdminRegister");
-                }else if(user.getRole().equals("teacher")){
-                    showSuccessAlert("Login Successful", "You have successfully logged in!");
+                        GradeApp.setRoot("AdminRegister");
+                    }
+                    case "teacher" -> {
+                        showSuccessAlert("Login Successful", "You have successfully logged in!");
 
-                    GradeApp.setRoot("TeacherGrades");
-                }else if(user.getRole().equals("student")){
-                    showSuccessAlert("Login Successful", "You have successfully logged in!");
+                        GradeApp.setRoot("TeacherGrades");
+                    }
+                    case "student" -> {
+                        showSuccessAlert("Login Successful", "You have successfully logged in!");
 
-                    GradeApp.setRoot("StudentGrades");
+                        GradeApp.setRoot("StudentGrades");
+                    }
                 }
             }else{
                 showAlert("Login Failed", "Invalid username or password!");
