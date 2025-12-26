@@ -1,6 +1,7 @@
 package com.grade_app.controllers;
 
 import com.grade_app.GradeApp;
+import com.grade_app.model.LoginUser;
 import com.grade_app.model.User;
 import com.grade_app.services.DatabaseConnection;
 
@@ -46,6 +47,8 @@ public class LoginController {
 
                     return;
                 }
+
+                LoginUser.setUser(user);
 
                 if(user.getRole().equals("admin")) {
                     showSuccessAlert("Login Successful", "You have successfully logged in!");

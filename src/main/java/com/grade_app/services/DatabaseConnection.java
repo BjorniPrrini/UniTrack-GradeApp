@@ -41,7 +41,6 @@ public class DatabaseConnection {
     }
 
     public User getUser(String email) {
-
         String sql = "SELECT userID, name, surname, email, role, year FROM Users WHERE email = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -188,14 +187,23 @@ public class DatabaseConnection {
                         if(generatedKeys.next()){
                             int studentID = generatedKeys.getInt(1);
 
-                            String sql2 = "INSERT INTO Grades (studentID, subjectID, subjectAssessmentID, gradeValue) SELECT ?, cs.subjectID, sa.subjectAssessmentID, 0 FROM Course_Subjects cs, Subject_Assessments sa WHERE cs.courseID = ? AND cs.subjectYear = ? AND sa.subjectID = cs.subjectID";
+                            String sql2 = "INSERT INTO Course_Student(studentID, courseID) VALUES (?, ?)";
 
                             try (PreparedStatement statement2 = connection.prepareStatement(sql2)) {
                                 statement2.setInt(1, studentID);
                                 statement2.setInt(2, course.getId());
-                                statement2.setInt(3, year);
 
                                 statement2.executeUpdate();
+                            }
+
+                            String sql3 = "INSERT INTO Grades (studentID, subjectID, subjectAssessmentID, gradeValue) SELECT ?, cs.subjectID, sa.subjectAssessmentID, 0 FROM Course_Subjects cs, Subject_Assessments sa WHERE cs.courseID = ? AND cs.subjectYear = ? AND sa.subjectID = cs.subjectID";
+
+                            try (PreparedStatement statement3 = connection.prepareStatement(sql3)) {
+                                statement3.setInt(1, studentID);
+                                statement3.setInt(2, course.getId());
+                                statement3.setInt(3, year);
+
+                                statement3.executeUpdate();
                             }
                         }
                     }
@@ -210,5 +218,77 @@ public class DatabaseConnection {
         }
 
         return false;
+    }
+
+    public List<User> getAllUsers(){
+        List<User> users = new ArrayList<>();
+
+        String sql = "SELECT userID, name, surname, email, role FROM Users";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet result = statement.executeQuery();
+
+            while(result.next()){
+                users.add(new User(result.getInt("userID"), result.getString("name"), result.getString("surname"), result.getString("email"), result.getString("role")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    public User searchUser(String name, String surname){
+        String sql = "SELECT userID, name, surname, email, role FROM Users WHERE name = ? AND surname = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, name);
+            statement.setString(2, surname);
+
+            try (ResultSet result = statement.executeQuery()){
+                if(result.next()){
+                    return new User(result.getInt("userID"), result.getString("name"), result.getString("surname"), result.getString("email"), result.getString("role"));
+                }
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public boolean deleteUser(String name, String surname){
+        String sql = "DELETE FROM Users WHERE name = ? AND surname = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, name);
+            statement.setString(2, surname);
+
+            int success = statement.executeUpdate();
+
+            return success > 0;
+        } catch(SQLException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+    }
+
+    public String getCoursePerStudent(int userId){
+        String sql = "SELECT Courses.courseName FROM Courses, Course_Student, Users WHERE Course_Student.studentID = ? AND Courses.courseID = Course_Student.courseID";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if(result.next()){
+                    return result.getString("courseName");
+                }
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 }

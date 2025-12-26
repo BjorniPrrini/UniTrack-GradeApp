@@ -117,6 +117,8 @@ public class AdminRegisterController {
                     courseComboBox.setManaged(true);
                     subjectsComboBox.setVisible(true);
                     subjectsComboBox.setManaged(true);
+                    yearComboBox.setVisible(false);
+                    yearComboBox.setManaged(false);
                 }
                 case "admin" -> {
                     courseComboBox.setVisible(false);
@@ -162,6 +164,15 @@ public class AdminRegisterController {
     public void register() {
         String name = nameField.getText();
         String surname = surnameField.getText();
+
+        if (name == null || name.isEmpty() || surname == null || surname.isEmpty()) {
+            showAlert("Empty fields", "The name or surname field is empty!");
+
+            return;
+        }
+
+        name = name.substring(0, 1).toUpperCase() + name.substring(1);
+        surname = surname.substring(0, 1).toUpperCase() + surname.substring(1);
         String email = generatedEmailField.getText();
         String password = generatedPasswordField.getText();
         String role = roleComboBox.getValue();

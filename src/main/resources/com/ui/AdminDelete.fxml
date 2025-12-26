@@ -31,21 +31,21 @@
     <center>
         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="700.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
             <children>
-                <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="294.0" promptText="Enter name..." />
-                <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="293.0" promptText="Enter surname...." />
-                <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="176.0" text="Search">
+                <TextField fx:id="nameField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="294.0" promptText="Enter name..." />
+                <TextField fx:id="surnameField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="293.0" promptText="Enter surname...." />
+                <Button fx:id="search" onAction="#searchUser" mnemonicParsing="false" prefHeight="34.0" prefWidth="176.0" text="Search">
                     <VBox.margin>
                         <Insets bottom="30.0" />
                     </VBox.margin></Button>
-                <TableView maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="616.0">
+                <TableView fx:id="userTable" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="616.0">
                     <columns>
-                        <TableColumn prefWidth="142.0" text="Name" />
-                        <TableColumn prefWidth="138.0" text="Surname" />
-                        <TableColumn prefWidth="180.0" text="Email" />
-                        <TableColumn prefWidth="155.0" text="Role" />
+                        <TableColumn fx:id="nameColumn" prefWidth="142.0" text="Name" />
+                        <TableColumn fx:id="surnameColumn" prefWidth="138.0" text="Surname" />
+                        <TableColumn fx:id="emailColumn" prefWidth="180.0" text="Email" />
+                        <TableColumn fx:id="roleColumn" prefWidth="155.0" text="Role" />
                     </columns>
                 </TableView>
-                <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="186.0" text="Delete">
+                <Button fx:id="delete" onAction="#deleteUser" mnemonicParsing="false" prefHeight="47.0" prefWidth="186.0" text="Delete">
                     <VBox.margin>
                         <Insets top="30.0" />
                     </VBox.margin></Button>

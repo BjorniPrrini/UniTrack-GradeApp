@@ -9,5 +9,6 @@ module com.gradeapp.grade_app {
 
     opens com.grade_app to javafx.fxml;
     opens com.grade_app.controllers to javafx.fxml;
+    opens com.grade_app.model to javafx.base, javafx.fxml;
     exports com.grade_app;
 }

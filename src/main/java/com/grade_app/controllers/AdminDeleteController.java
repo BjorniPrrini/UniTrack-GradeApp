@@ -1,11 +1,18 @@
 package com.grade_app.controllers;
 
 import com.grade_app.GradeApp;
+import com.grade_app.model.User;
+import com.grade_app.services.DatabaseConnection;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class AdminDeleteController {
     @FXML
@@ -22,6 +29,33 @@ public class AdminDeleteController {
 
     @FXML
     private Button subjectButton;
+
+    @FXML
+    private TextField nameField;
+
+    @FXML
+    private TextField surnameField;
+
+    @FXML
+    private Button search;
+
+    @FXML
+    private TableView<User> userTable;
+
+    @FXML
+    private TableColumn<User, String> nameColumn;
+
+    @FXML
+    private TableColumn<User, String> surnameColumn;
+
+    @FXML
+    private TableColumn<User, String> emailColumn;
+
+    @FXML
+    private TableColumn<User, String> roleColumn;
+
+    @FXML
+    private Button delete;
 
     @FXML
     public void adminRegister() throws IOException {
@@ -49,11 +83,91 @@ public class AdminDeleteController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
         insertButton.setFocusTraversable(false);
         deleteButton.setFocusTraversable(true);
         assignButton.setFocusTraversable(false);
         logOutButton.setFocusTraversable(false);
         subjectButton.setFocusTraversable(false);
+
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+
+        DatabaseConnection database = new DatabaseConnection();
+
+        ObservableList<User> users = FXCollections.observableArrayList(database.getAllUsers());
+
+        userTable.setItems(users);
+    }
+
+    @FXML
+    public void searchUser() {
+        search.setDisable(true);
+
+        String name = nameField.getText();
+        String surname = surnameField.getText();
+
+        try{
+            DatabaseConnection database = new DatabaseConnection();
+
+            User user = database.searchUser(name, surname);
+            ObservableList<User> userList = FXCollections.observableArrayList();
+
+            if (user != null) {
+                userList.add(user);
+            } else {
+                showAlert("User not found", "User was not found!");
+            }
+
+            userTable.setItems(userList);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } finally {
+            search.setDisable(false);
+        }
+    }
+
+    public void deleteUser() {
+        delete.setDisable(true);
+
+        String name = nameField.getText();
+        String surname = surnameField.getText();
+
+        try{
+            DatabaseConnection database = new DatabaseConnection();
+
+            boolean success = database.deleteUser(name, surname);
+
+            if(success){
+                showSuccessAlert("User deleted", "User was successfully deleted!");
+                initialize();
+            }else{
+                showAlert("Error", "User was not deleted!");
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } finally {
+            delete.setDisable(false);
+        }
+    }
+
+    private void showAlert(String title, String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showSuccessAlert(String title, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
