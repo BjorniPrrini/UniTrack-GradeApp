@@ -1,70 +1,88 @@
 .root {
-    -fx-background-color: #f4f6f8;
+    -fx-background-color: #f5f5f5;
 }
 
-#assignCenterVbox {
-    -fx-background-color: linear-gradient(to bottom, #ffffff 0%, #eef1ff 100%);
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
+#adminAnchorPane {
+    -fx-background-color: linear-gradient(to bottom, white 0%, white 220px, #D8A55B 220px, #D8A55B 100%);
+    -fx-padding: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 2, 0);
 }
 
-#teacherNameField,
-#teacherSurnameField {
-    -fx-background-color: white;
-    -fx-border-color: #D8A55B;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
+#adminAnchorPane Button {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
     -fx-font-size: 14px;
-}
-
-#teacherNameField:focused,
-#teacherSurnameField:focused {
-    -fx-border-color: #D8A55B;
-}
-
-#subjectComboBox {
-    -fx-background-color: white;
-    -fx-border-color: #D8A55B;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-font-size: 14px;
-}
-
-#subjectComboBox .arrow-button {
-    -fx-background-color: #D8A55B;
-    -fx-background-radius: 0 6 6 0;
-}
-
-#subjectComboBox .arrow {
-    -fx-background-color: white;
-}
-
-#subjectComboBox:hover .arrow-button {
-    -fx-background-color: #D8A55B;
-}
-
-Button {
     -fx-font-weight: bold;
-    -fx-text-fill: white;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
+    -fx-border-width: 2;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
 }
 
-#loadSubjectButton {
-    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+#adminAnchorPane Button:hover {
+    -fx-background-color: #D8A55B;
+    -fx-text-fill: black;
 }
 
-#loadSubjectButton:hover {
-    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+#logOutButton {
+    -fx-border-color: #bf2e2e;
 }
 
-#submitButton {
-    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+#logOutButton:hover {
+    -fx-background-color: #bf2e2e;
+    -fx-text-fill: white;
 }
 
-#submitButton:hover {
+#assignCenterVbox {
+    -fx-background-color: white;
+    -fx-padding: 30;
+    -fx-spacing: 20;
+    -fx-alignment: CENTER;
+}
+
+#assignCenterVbox TextField {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #D8A55B;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+}
+
+#assignCenterVbox ComboBox {
+    -fx-background-color: white;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 13px;
+}
+
+#assignCenterVbox ComboBox .arrow-button {
+    -fx-background-color: #D8A55B;
+    -fx-background-radius: 0 5 5 0;
+}
+
+#assignCenterVbox ComboBox .arrow {
+    -fx-background-color: white;
+}
+
+#assignCenterVbox RadioButton {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+#assignCenterVbox Button {
     -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+#assignCenterVbox Button:hover {
+    -fx-background-color: linear-gradient(to right, #c0875c, #D8A55B);
 }
 
 

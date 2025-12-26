@@ -2,91 +2,84 @@
     -fx-background-color: #f5f5f5;
 }
 
-VBox {
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #eef1ff);
+#adminAnchorPane {
+    -fx-background-color: linear-gradient(to bottom, white 0%, white 220px, #D8A55B 220px, #D8A55B 100%);
+    -fx-padding: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 2, 0);
+}
+
+#adminAnchorPane Button {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-width: 2;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+#adminAnchorPane Button:hover {
+    -fx-background-color: #D8A55B;
+    -fx-text-fill: black;
+}
+
+#logOutButton {
+    -fx-border-color: #bf2e2e;
+}
+
+#logOutButton:hover {
+    -fx-background-color: #bf2e2e;
+    -fx-text-fill: white;
+}
+
+BorderPane > .center > VBox {
+    -fx-background-color: white;
     -fx-padding: 30;
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
-    -fx-border-color: transparent;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 12, 0, 0, 4);
+    -fx-spacing: 20;
+    -fx-alignment: CENTER;
 }
 
 TextField {
-    -fx-background-color: white;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
     -fx-border-color: #D8A55B;
     -fx-border-width: 1;
-    -fx-font-size: 14px;
     -fx-padding: 8 12;
-}
-
-TextField:focused {
-    -fx-border-color: #D8A55B;
-}
-
-Button {
-    -fx-background-color: #D8A55B;
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 8;
-    -fx-cursor: hand;
-    -fx-padding: 10 24;
-}
-
-#searchButton {
-    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
-}
-
-#searchButton:hover {
-    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
-}
-
-#deleteButton {
-    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
-}
-
-#deleteButton:hover {
-    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+    -fx-font-size: 13px;
 }
 
 TableView {
-    -fx-background-color: white;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-border-color:#D8A55B;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
 }
 
-TableView .column-header-background {
+.table-view .column-header-background,
+.table-view .column-header,
+.table-view .filler {
     -fx-background-color: #D8A55B;
-    -fx-background-radius: 8 8 0 0;
 }
 
-TableView .column-header {
-    -fx-background-color: transparent;
-}
-
-TableView .column-header .label {
+.table-view .column-header .label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-font-size: 13px;
 }
 
-TableView .table-row-cell {
+VBox Button {
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+VBox Button:hover {
+    -fx-background-color: linear-gradient(to right, #c0875c, #D8A55B);
+}
+#deleteCenterVbox {
     -fx-background-color: white;
 }
 
-TableView .table-row-cell:odd {
-    -fx-background-color: #f2f4ff;
-}
-
-TableView .table-row-cell:selected {
-    -fx-background-color: #C5CAE9;
-}
-
-TableView .cell {
-    -fx-font-size: 13px;
-    -fx-text-fill: #333333;
-}
 

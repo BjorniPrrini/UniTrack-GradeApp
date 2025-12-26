@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
 
-
-<BorderPane fx:id="studentBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grade_app.controllers.StudentProfileController">
+<BorderPane fx:id="studentBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@../css/StudentProfile.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grade_app.controllers.StudentProfileController">
    <left>
       <AnchorPane prefHeight="600.0" prefWidth="237.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="studentProfileButton" layoutX="1.0" layoutY="272.0" mnemonicParsing="false" onAction="#openStudentProfile" prefHeight="50.0" prefWidth="237.0" text="PROFILE" />
             <Button fx:id="studentGradesButton" layoutX="1.0" layoutY="322.0" mnemonicParsing="false" onAction="#openStudentGrades" prefHeight="51.0" prefWidth="238.0" text="GRADES" />
-            <Button fx:id="logOutButton" layoutX="-1.0" layoutY="532.0" mnemonicParsing="false" onAction="#logOut" prefHeight="45.0" prefWidth="238.0" text="LOG OUT" />
+            <Button fx:id="logOutButton" layoutX="1.0" layoutY="532.0" mnemonicParsing="false" onAction="#logOut" prefHeight="45.0" prefWidth="236.0" text="LOG OUT" />
             <ImageView fitHeight="190.0" fitWidth="189.0" layoutX="24.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@/logo.png" />
@@ -32,22 +31,22 @@
                   <Image url="@/student.png" />
                </image>
             </ImageView>
-            <Label fx:id="studentNameLabel" layoutX="175.0" layoutY="300.0" text="Name :">
+            <Label fx:id="studentNameLabel" layoutX="203.0" layoutY="300.0" prefHeight="48.0" prefWidth="365.0" text=" Name Surname">
                <font>
                   <Font size="19.0" />
                </font>
             </Label>
-            <Label fx:id="studentSurnameLabel" layoutX="162.0" layoutY="351.0" text="Surname: ">
+            <Label fx:id="studentSurnameLabel" layoutX="206.0" layoutY="366.0" prefHeight="48.0" prefWidth="365.0" text="email">
                <font>
                   <Font size="19.0" />
                </font>
             </Label>
-            <Label fx:id="studentYearLabel" layoutX="182.0" layoutY="410.0" text="Year: ">
+            <Label fx:id="studentYearLabel" layoutX="206.0" layoutY="430.0" prefHeight="48.0" prefWidth="365.0" text="Year">
                <font>
                   <Font size="19.0" />
                </font>
             </Label>
-            <Label fx:id="studentDegreeLabel" layoutX="162.0" layoutY="465.0" text="Course: ">
+            <Label fx:id="studentDegreeLabel" layoutX="205.0" layoutY="493.0" prefHeight="48.0" prefWidth="368.0" text="Software">
                <font>
                   <Font size="19.0" />
                </font>

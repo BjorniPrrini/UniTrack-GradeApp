@@ -21,25 +21,22 @@
             </ImageView>
             <Button fx:id="teacherGradesButton" layoutX="1.0" layoutY="323.0" mnemonicParsing="false" onAction="#teacherGrades" prefHeight="48.0" prefWidth="254.0" text="GRADES" />
             <Button fx:id="teacherProfileButton" layoutX="1.0" layoutY="276.0" mnemonicParsing="false" onAction="#teacherProfile" prefHeight="48.0" prefWidth="254.0" text="PROFILE" />
-            <Button fx:id="logOutButton" layoutY="538.0" mnemonicParsing="false" onAction="#logOut" prefHeight="30.0" prefWidth="255.0" text="LOG OUT" />
+            <Button fx:id="logOutButton" layoutY="525.0" mnemonicParsing="false" onAction="#logOut" prefHeight="47.0" prefWidth="255.0" text="LOG OUT" />
          </children>
       </AnchorPane>
    </left>
    <center>
       <VBox fx:id="centerVbox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
-            <ComboBox fx:id="subjectComboBox" prefWidth="150.0" promptText="Choose Subject" />
-            <TableView fx:id="studentGradeTable" prefHeight="450.0" prefWidth="661.0" />
+            <ComboBox fx:id="subjectComboBox" prefHeight="28.0" prefWidth="248.0" promptText="Select Subject" />
+            <TableView fx:id="studentGradeTable" maxWidth="-Infinity" prefHeight="442.0" prefWidth="663.0" />
             <HBox alignment="CENTER" prefHeight="42.0" prefWidth="661.0" spacing="30.0">
                <children>
-                  <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="39.0" prefWidth="68.0" text="Submit" />
-                  <Button fx:id="finalizeButton" mnemonicParsing="false" prefHeight="39.0" prefWidth="66.0" text="Finalize" />
+                  <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="39.0" prefWidth="118.0" text="Submit" />
+                  <Button fx:id="finalizeButton" mnemonicParsing="false" prefHeight="39.0" prefWidth="108.0" text="Finalize" />
                </children>
             </HBox>
          </children>
       </VBox>
    </center>
-   <right>
-      <AnchorPane fx:id="rightTeacher" prefHeight="600.0" prefWidth="44.0" BorderPane.alignment="CENTER" />
-   </right>
 </BorderPane>

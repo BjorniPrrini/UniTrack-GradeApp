@@ -13,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class AdminDeleteController {
     @FXML
@@ -79,7 +80,14 @@ public class AdminDeleteController {
 
     @FXML
     public void logOut(ActionEvent actionEvent) throws IOException {
-        GradeApp.setRoot("LogInPage");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Logout Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("ARE YOU SURE YOU WANT TO LOG OUT?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            GradeApp.setRoot("LogInPage");
+        }
     }
 
     @FXML

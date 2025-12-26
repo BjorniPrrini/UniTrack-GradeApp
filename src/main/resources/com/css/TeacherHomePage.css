@@ -4,7 +4,7 @@
 
 #leftTeacherVbox {
     -fx-background-color: linear-gradient(to bottom, white 0%, white 220px, #D8A55B 220px, #D8A55B 100%);
-    -fx-padding: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 2, 0);
 }
 
 #leftTeacherVbox Button {
@@ -12,14 +12,11 @@
     -fx-text-fill: black;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-alignment: CENTER;
     -fx-border-width: 2;
     -fx-border-color: #D8A55B;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-cursor: hand;
-    -fx-padding: 12 0;
-    -fx-transition: all 0.2s ease;
 }
 
 #leftTeacherVbox Button:hover {
@@ -27,81 +24,59 @@
     -fx-text-fill: black;
 }
 
-#leftTeacherVbox Button.active-button {
-    -fx-background-color: #D8A55B;
-    -fx-text-fill: black;
+#logOutButton {
+    -fx-border-color: #bf2e2e;
 }
 
-#logOutButton {
-    -fx-background-color: transparent;
-    -fx-border-width: 2;
-    -fx-border-color: #D8A55B;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-}
 #logOutButton:hover {
-    -fx-background-color: #D8A55B;
-    -fx-text-fill: black;
+    -fx-background-color: #bf2e2e;
+    -fx-text-fill: white;
 }
 
 #centerVbox {
     -fx-background-color: white;
-    -fx-padding: 20;
+    -fx-padding: 30 30 30 0;
     -fx-spacing: 15;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-alignment: CENTER;
 }
 
-#centerVbox HBox {
-    -fx-spacing: 10;
-}
-
-#centerVbox TextField {
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
+#centerVbox ComboBox {
+    -fx-background-color: white;
     -fx-border-color: #D8A55B;
-    -fx-border-width: 1;
-    -fx-padding: 5 10 5 10;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
     -fx-font-size: 13px;
+}
+
+#centerVbox TableView {
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.table-view .column-header-background,
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: #D8A55B;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 #centerVbox Button {
-    -fx-background-color: #D8A55B;
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 5;
+    -fx-cursor: hand;
 }
 
 #centerVbox Button:hover {
-    -fx-background-color: #c48b4b;
-}
-
-#studentInfoTable {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #e0e0e0;
-    -fx-border-width: 1;
-    -fx-table-cell-border-color: #e0e0e0;
-    -fx-table-header-border-color: #D8A55B;
-    -fx-padding: 10;
-}
-
-#studentInfoTable .column-header {
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-alignment: CENTER_LEFT;
-}
-
-#studentIdColumn, #studentNameColumn, #studentSurnameColumn {
-    -fx-alignment: CENTER_LEFT;
-}
-
-#centerVbox Label {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+    -fx-background-color: linear-gradient(to right, #c0875c, #D8A55B);
 }
 
 #rightTeacher {
-    -fx-background-color: #D8A55B;
+    -fx-background-color: transparent;
 }

@@ -4,15 +4,23 @@ import com.grade_app.GradeApp;
 import com.grade_app.model.LoginUser;
 import com.grade_app.model.Student;
 import com.grade_app.services.DatabaseConnection;
-
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class StudentProfileController {
+    @FXML
+    private Button studentProfileButton;
+
+    @FXML
+    private Button studentGradesButton;
+
     @FXML
     private Label studentNameLabel;
 
@@ -26,12 +34,6 @@ public class StudentProfileController {
     private Label studentDegreeLabel;
 
     @FXML
-    private Button studentProfileButton;
-
-    @FXML
-    private Button studentGradesButton;
-
-    @FXML
     public void openStudentGrades() throws IOException {
         GradeApp.setRoot("StudentGrades");
     }
@@ -43,7 +45,14 @@ public class StudentProfileController {
 
     @FXML
     public void logOut() throws IOException {
-        GradeApp.setRoot("LogInPage");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Logout Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("ARE YOU SURE YOU WANT TO LOG OUT?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            GradeApp.setRoot("LogInPage");
+        }
     }
 
     @FXML
@@ -53,16 +62,16 @@ public class StudentProfileController {
 
         Student student = (Student) LoginUser.getUser();
 
-        studentNameLabel.setText("Name: " + student.getName());
-        studentSurnameLabel.setText("Surname: " + student.getSurname());
-        studentYearLabel.setText("Year: " + String.valueOf(student.getYear()));
+        studentNameLabel.setText(student.getName() + "  " + student.getSurname());
+        studentSurnameLabel.setText(student.getEmail());
+        studentYearLabel.setText("Year: " + student.getYear());
 
-        try {
+        try{
             DatabaseConnection database = new DatabaseConnection();
-
-            studentDegreeLabel.setText("Course: " + database.getCoursePerStudent(student.getUserID()));
-        } catch(SQLException e) {
+            studentDegreeLabel.setText(database.getCoursePerStudent(student.getUserID()));
+        }catch (SQLException e){
             e.printStackTrace();
         }
+
     }
 }

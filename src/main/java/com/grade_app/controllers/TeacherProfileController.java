@@ -1,11 +1,13 @@
 package com.grade_app.controllers;
 
 import com.grade_app.GradeApp;
-
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class TeacherProfileController {
     @FXML
@@ -26,7 +28,14 @@ public class TeacherProfileController {
 
     @FXML
     public void logOut() throws IOException {
-        GradeApp.setRoot("LogInPage");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Logout Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("ARE YOU SURE YOU WANT TO LOG OUT?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            GradeApp.setRoot("LogInPage");
+        }
     }
 
     @FXML

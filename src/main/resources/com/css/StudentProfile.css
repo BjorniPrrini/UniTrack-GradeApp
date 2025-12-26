@@ -1,0 +1,82 @@
+.root {
+    -fx-background-color: #f5f5f5;
+}
+
+#studentBorderPane {
+    -fx-background-color: white;
+}
+
+#leftAnchorPane {
+    -fx-background-color: linear-gradient(to bottom, white 0%, white 220px, #D8A55B 220px, #D8A55B 100%);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 2, 0);
+}
+
+#studentProfileButton {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-width: 2;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-alignment: CENTER;
+    -fx-cursor: hand;
+}
+
+#studentProfileButton:hover {
+    -fx-background-color: #D8A55B;
+    -fx-text-fill: black;
+}
+
+#studentGradesButton {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-width: 2;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-alignment: CENTER;
+    -fx-cursor: hand;
+}
+
+#studentGradesButton:hover {
+    -fx-background-color: #D8A55B;
+    -fx-text-fill: black;
+}
+
+#logOutButton {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-width: 2;
+    -fx-border-color: #bf2e2e;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-alignment: CENTER;
+    -fx-cursor: hand;
+}
+
+#logOutButton:hover {
+    -fx-background-color: #bf2e2e;
+    -fx-text-fill: white;
+}
+
+#studentProfileAnchorPane {
+    -fx-background-color: white;
+}
+
+#studentProfileAnchorPane Label {
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 19px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-alignment: CENTER_LEFT;
+}
+

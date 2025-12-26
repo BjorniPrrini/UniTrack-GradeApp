@@ -46,10 +46,13 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </PasswordField>
-            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginHomePage" prefHeight="20.0" prefWidth="92.0" style="-fx-background-color: #D8A55B; -fx-text-fill: white;" text="LogIn">
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginHomePage" prefHeight="34.0" prefWidth="125.0" style="-fx-background-color: #D8A55B; -fx-text-fill: white;" text="LogIn">
                <padding>
                   <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
                </padding>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
          </children>
          <BorderPane.margin>

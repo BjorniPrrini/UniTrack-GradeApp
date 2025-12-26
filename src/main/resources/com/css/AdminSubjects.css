@@ -1,56 +1,47 @@
 .root {
-    -fx-background-color: #f4f6f8;
+    -fx-background-color: #f5f5f5;
+}
+
+#adminAnchorPane {
+    -fx-background-color: linear-gradient(to bottom, white 0%, white 220px, #D8A55B 220px, #D8A55B 100%);
+    -fx-padding: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 2, 0);
+}
+
+#adminAnchorPane Button {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-width: 2;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+#adminAnchorPane Button:hover {
+    -fx-background-color: #D8A55B;
+    -fx-text-fill: black;
+}
+
+#logOutButton {
+    -fx-border-color: #bf2e2e;
+}
+
+#logOutButton:hover {
+    -fx-background-color: #bf2e2e;
+    -fx-text-fill: white;
 }
 
 #subjectCenterVbox {
-    -fx-background-color: linear-gradient(to bottom, #ffffff 0%, #eef1ff 100%);
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
-}
-
-#coursesComboBox,
-#subjectComboBox {
     -fx-background-color: white;
-    -fx-border-color: #D8A55B;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-font-size: 14px;
+    -fx-padding: 0;
+    -fx-spacing: 20;
+    -fx-alignment: TOP_CENTER;
 }
 
-#coursesComboBox .arrow-button,
-#subjectComboBox .arrow-button {
-    -fx-background-color: #D8A55B;
-    -fx-background-radius: 0 6 6 0;
-}
-
-#coursesComboBox .arrow,
-#subjectComboBox .arrow {
-    -fx-background-color: white;
-}
-
-#coursesComboBox:hover .arrow-button,
-#subjectComboBox:hover .arrow-button {
-    -fx-background-color: #D8A55B;
-}
-
-CheckBox {
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
-}
-
-CheckBox:selected .box {
-    -fx-background-color: #4CAF50;
-}
-
-CheckBox:selected .mark {
-    -fx-background-color: white;
-}
-
-#midtermField,
-#finalField,
-#quizField,
-#homeworkField,
-#projectField {
+#subjectCenterVbox ComboBox {
     -fx-background-color: white;
     -fx-border-color: #D8A55B;
     -fx-border-radius: 5;
@@ -58,40 +49,42 @@ CheckBox:selected .mark {
     -fx-font-size: 13px;
 }
 
-#midtermField:focused,
-#finalField:focused,
-#quizField:focused,
-#homeworkField:focused,
-#projectField:focused {
-    -fx-border-color: #D8A55B;
+#subjectCenterVbox CheckBox {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
 }
 
-Label {
+#subjectCenterVbox CheckBox:selected {
+    -fx-mark-color: #4CAF50;
+}
+
+#subjectCenterVbox TextField {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #D8A55B;
+    -fx-border-width: 1;
+    -fx-padding: 5 10;
+    -fx-font-size: 13px;
+}
+
+#subjectCenterVbox Button {
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+#subjectCenterVbox Button:hover {
+    -fx-background-color: linear-gradient(to right, #c0875c, #D8A55B);
+}
+
+#subjectCenterVbox Label {
+    -fx-font-size: 19px;
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
 }
 
-#submitButton {
-    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-}
-
-#submitButton:hover {
-    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
-}
-Label {
-    -fx-font-weight: bold;
-    -fx-text-fill: #c0875c;
-    -fx-background-color: #E3F2FD; /* light blue background */
-    -fx-background-radius: 6;       /* rounded corners */
-    -fx-border-radius: 6;           /* match corners */
-    -fx-border-color: #D8A55B;      /* subtle border */
-    -fx-border-width: 1;
-    -fx-padding: 3 8;               /* small padding inside label */
-}
 
 
 

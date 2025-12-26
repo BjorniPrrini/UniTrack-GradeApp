@@ -1,0 +1,55 @@
+.root {
+    -fx-background-color: #f5f5f5;
+}
+
+#studentBorderPane {
+    -fx-background-color: white;
+}
+
+#leftAnchorPane {
+    -fx-background-color: linear-gradient(to bottom, white 0%, white 220px, #D8A55B 220px, #D8A55B 100%);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 2, 0);
+}
+
+#leftAnchorPane Button {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-width: 2;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+#leftAnchorPane Button:hover {
+    -fx-background-color: #D8A55B;
+    -fx-text-fill: black;
+}
+
+#logOutButton {
+    -fx-border-color: #bf2e2e;
+}
+
+#logOutButton:hover {
+    -fx-background-color: #bf2e2e;
+    -fx-text-fill: white;
+}
+
+#studentCenterVbox {
+    -fx-background-color: linear-gradient(to bottom, white 0%, #fff8e7 100%);
+    -fx-padding: 40 40 40 0;
+    -fx-spacing: 20;
+    -fx-alignment: TOP_CENTER;
+}
+
+#topLabel {
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 23px;
+    -fx-padding: 12 25;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}

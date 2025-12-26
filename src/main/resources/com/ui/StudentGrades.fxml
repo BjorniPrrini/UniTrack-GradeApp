@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="studentBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grade_app.controllers.StudentGradesController">
+<BorderPane fx:id="studentBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@../css/StudentGrades.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grade_app.controllers.StudentGradesController">
    <left>
-      <AnchorPane prefHeight="600.0" prefWidth="237.0" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="leftAnchorPane" prefHeight="600.0" prefWidth="237.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="studentProfileButton" layoutX="1.0" layoutY="272.0" mnemonicParsing="false" onAction="#openStudentProfile" prefHeight="50.0" prefWidth="237.0" text="PROFILE" />
             <Button fx:id="studentGradesButton" layoutX="1.0" layoutY="322.0" mnemonicParsing="false" onAction="#openStudentGrades" prefHeight="51.0" prefWidth="238.0" text="GRADES" />
@@ -23,6 +26,16 @@
       </AnchorPane>
    </left>
    <center>
-      <VBox fx:id="studentCenterVbox" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+      <VBox fx:id="studentCenterVbox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="topLabel" text="Your Progress">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets top="50.0" />
+         </padding></VBox>
    </center>
 </BorderPane>

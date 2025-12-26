@@ -21,6 +21,7 @@ public class GradeApp extends Application {
         stage.setScene(scene);
         stage.setTitle("UniTrack");
         stage.setMaximized(false);
+        stage.setResizable(false);
         stage.show();
     }
 
