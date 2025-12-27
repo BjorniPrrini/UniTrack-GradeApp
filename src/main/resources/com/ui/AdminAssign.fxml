@@ -43,7 +43,7 @@
                      </toggleGroup>
                   </RadioButton>
                   <RadioButton fx:id="deleteRadio" mnemonicParsing="false" text="DELETE" toggleGroup="$optionToggleGroup" />
-                  <Button fx:id="loadSubjectButton" mnemonicParsing="false" prefHeight="33.0" prefWidth="185.0" text="Load Subjects" />
+                  <Button fx:id="loadSubjectButton" onAction="#loadSubjects" mnemonicParsing="false" prefHeight="33.0" prefWidth="185.0" text="Load Subjects" />
                </children>
             </HBox>
             <ComboBox fx:id="subjectComboBox" prefHeight="31.0" prefWidth="302.0" promptText="Subjects">
@@ -51,7 +51,7 @@
                   <Insets top="50.0" />
                </VBox.margin>
             </ComboBox>
-            <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="38.0" prefWidth="167.0" text="Submit">
+            <Button fx:id="submitButton" onAction="#submit" mnemonicParsing="false" prefHeight="38.0" prefWidth="167.0" text="Submit">
                <VBox.margin>
                   <Insets top="30.0" />
                </VBox.margin>

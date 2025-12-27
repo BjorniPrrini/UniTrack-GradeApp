@@ -291,4 +291,89 @@ public class DatabaseConnection {
 
         return "";
     }
+
+    public List<String> getSubjectNotInTeacher(int teacherID) {
+        List<String> subjects = new ArrayList<>();
+
+        String sql = "SELECT subjectName FROM Subjects WHERE subjectID NOT IN (SELECT subjectID FROM Teacher_Subject WHERE teacherID = ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, teacherID);
+
+            try (ResultSet result = statement.executeQuery()) {
+                while (result.next()) {
+                    subjects.add(result.getString("subjectName"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return subjects;
+    }
+
+    public List<String> getSubjectInTeacher(int teacherID) {
+        List<String> subjects = new ArrayList<>();
+
+        String sql = "SELECT subjectName FROM Subjects WHERE subjectID IN (SELECT subjectID FROM Teacher_Subject WHERE teacherID = ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, teacherID);
+
+            try (ResultSet result = statement.executeQuery()) {
+                while (result.next()) {
+                    subjects.add(result.getString("subjectName"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return subjects;
+    }
+
+    public boolean submitAssignedSubject(int teacherID, String chosenSubject, String choice) {
+        String sql1 = "SELECT subjectID, (SELECT courseID FROM Course_Subjects WHERE subjectID = Subjects.subjectID) AS courseID FROM Subjects WHERE subjectName = ?";
+        int subjectID = -1;
+        int courseID = -1;
+
+        try (PreparedStatement statement1 = connection.prepareStatement(sql1)) {
+            statement1.setString(1, chosenSubject);
+
+            try (ResultSet result1 = statement1.executeQuery()) {
+                if (result1.next()) {
+                    subjectID = result1.getInt("subjectID");
+                    courseID = result1.getInt("courseID");
+                } else {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+
+        String sql2 = "";
+
+        if(choice.equalsIgnoreCase("Add")){
+            sql2 = "INSERT INTO Teacher_Subject(teacherID, subjectID, courseID) VALUES(?, ?, ?)";
+        }else if(choice.equalsIgnoreCase("Delete")){
+            sql2 = "DELETE FROM Teacher_Subject WHERE teacherID = ? AND subjectID = ? AND courseID = ?";
+        }
+
+        try (PreparedStatement statement2 = connection.prepareStatement(sql2)) {
+            statement2.setInt(1, teacherID);
+            statement2.setInt(2, subjectID);
+            statement2.setInt(3, courseID);
+
+            int successful = statement2.executeUpdate();
+
+            return successful > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+    }
 }
