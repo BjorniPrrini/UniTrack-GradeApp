@@ -139,6 +139,7 @@ public class AdminDeleteController {
         }
     }
 
+    @FXML
     public void deleteUser() {
         delete.setDisable(true);
 

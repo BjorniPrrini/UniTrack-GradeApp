@@ -56,19 +56,19 @@
             </AnchorPane>
             <HBox alignment="CENTER" prefHeight="61.0" prefWidth="1000.0" spacing="150.0">
                <children>
-                  <Label fx:id="totalAssignedLabel" text="Total Assigned:">
+                  <Label fx:id="totalAssignedLabel" text="Total Assigned: 0%">
                      <font>
                         <Font size="19.0" />
                      </font>
                   </Label>
-                  <Label fx:id="remainingLabel" text="Remaining:">
+                  <Label fx:id="remainingLabel" text="Remaining: 100%">
                      <font>
                         <Font size="19.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-            <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="37.0" prefWidth="390.0" text="Submit" />
+            <Button fx:id="submitButton" onAction="#submit" mnemonicParsing="false" prefHeight="37.0" prefWidth="390.0" text="Submit" />
          </children>
       </VBox>
    </center>

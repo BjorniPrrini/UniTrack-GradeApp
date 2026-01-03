@@ -24,6 +24,7 @@ public class LoginController {
     @FXML
     private Button loginButton;
 
+    @FXML
     public void loginHomePage() throws IOException {
         loginButton.setDisable(true);
 

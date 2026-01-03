@@ -6,11 +6,9 @@ import com.grade_app.services.DatabaseConnection;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -140,6 +138,7 @@ public class AdminAssignController {
         }
     }
 
+    @FXML
     public void submit() {
         submitButton.setDisable(true);
 
@@ -147,6 +146,7 @@ public class AdminAssignController {
             DatabaseConnection database = new DatabaseConnection();
 
             Toggle selectedToggle = optionToggleGroup.getSelectedToggle();
+
             if(selectedToggle == null){
                 showAlert("Selection Error", "Please select Add or Delete");
 

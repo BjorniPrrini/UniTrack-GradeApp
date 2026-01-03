@@ -4,14 +4,18 @@ import com.grade_app.model.Course;
 import com.grade_app.model.Student;
 import com.grade_app.model.Subject;
 import com.grade_app.model.User;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DatabaseConnection {
     private final Connection connection;
@@ -196,7 +200,7 @@ public class DatabaseConnection {
                                 statement2.executeUpdate();
                             }
 
-                            String sql3 = "INSERT INTO Grades (studentID, subjectID, subjectAssessmentID, gradeValue) SELECT ?, Course_Subjects.subjectID, Course_Subjects.subjectAssessmentID, 0 FROM Course_Subjects, Subject_Assessments WHERE Course_Subjects.courseID = ? AND Course_Subjects.subjectYear = ? AND Subject_Assessments.subjectID = Course_Subjects.subjectID";
+                            String sql3 =  "INSERT INTO Grades (studentID, subjectID, subjectAssessmentID, gradeValue) SELECT ?, Subject_Assessments.subjectID, Subject_Assessments.subjectAssessmentID, 0 FROM Course_Subjects, Subject_Assessments WHERE Course_Subjects.courseID = ? AND Course_Subjects.subjectYear = ? AND Subject_Assessments.subjectID = Course_Subjects.subjectID AND Subject_Assessments.active = 1";
 
                             try (PreparedStatement statement3 = connection.prepareStatement(sql3)) {
                                 statement3.setInt(1, studentID);
@@ -375,5 +379,139 @@ public class DatabaseConnection {
 
             return false;
         }
+    }
+
+
+    public Map<String, Integer> getSubjectAssessments(int subjectID) {
+        Map<String, Integer> assessments = new HashMap<>();
+
+        String sql = "SELECT Assessments.assessmentName, Subject_Assessments.weight FROM Assessments, Subject_Assessments WHERE Subject_Assessments.subjectID = ? AND Subject_Assessments.assessmentID = Assessments.assessmentID AND Subject_Assessments.active = 1";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, subjectID);
+
+            try (ResultSet result = statement.executeQuery()) {
+                while(result.next()){
+                    assessments.put(result.getString("assessmentName"), result.getInt("weight"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return assessments;
+    }
+
+    public boolean setAssessmentActive(int subjectID, String assessmentName, boolean active) {
+        String sql = "UPDATE Subject_Assessments SET active = ? WHERE subjectID = ? AND assessmentID = (SELECT assessmentID FROM Assessments WHERE assessmentName = ?)";
+
+        int activeInt  = active ? 1 : 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, activeInt);
+            statement.setInt(2, subjectID);
+            statement.setString(3, assessmentName);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean addOrUpdateSubjectAssessment(int subjectID, String assessmentName, int weight, boolean active) {
+        int activeInt  = active ? 1 : 0;
+
+        int assessmentID = -1;
+
+        String sql1 = "SELECT assessmentID FROM Assessments WHERE assessmentName = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql1)) {
+            statement.setString(1, assessmentName);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if(result.next()){
+                    assessmentID = result.getInt("assessmentID");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+
+        if (assessmentID == -1) {
+            String sql2 = "INSERT INTO Assessments (assessmentName) VALUES (?)";
+
+            try (PreparedStatement statement = connection.prepareStatement(sql2, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                statement.setString(1, assessmentName);
+                statement.executeUpdate();
+
+                try (ResultSet keys = statement.getGeneratedKeys()) {
+                    if (keys.next()) {
+                        assessmentID = keys.getInt(1);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+                return false;
+            }
+        }
+
+        int subjectAssessmentID = -1;
+
+        String sql3 = "SELECT subjectAssessmentID FROM Subject_Assessments WHERE subjectID = ? AND assessmentID = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql3)) {
+            statement.setInt(1, subjectID);
+            statement.setInt(2, assessmentID);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if(result.next()){
+                    subjectAssessmentID = result.getInt("subjectAssessmentID");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+
+        if(subjectAssessmentID != -1){
+            String sql4 = "UPDATE Subject_Assessments SET weight = ?, active = ? WHERE subjectAssessmentID = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(sql4)) {
+                statement.setInt(1, weight);
+                statement.setInt(2, activeInt);
+                statement.setInt(3, subjectAssessmentID);
+
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+                return false;
+            }
+        }else{
+            String sql5 = "INSERT INTO Subject_Assessments (subjectID, assessmentID, weight, active) VALUES (?, ?, ?, ?)";
+
+            try (PreparedStatement statement = connection.prepareStatement(sql5)) {
+                statement.setInt(1, subjectID);
+                statement.setInt(2, assessmentID);
+                statement.setInt(3, weight);
+                statement.setInt(4, activeInt);
+
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+                return false;
+            }
+        }
+
+        return true;
     }
 }
