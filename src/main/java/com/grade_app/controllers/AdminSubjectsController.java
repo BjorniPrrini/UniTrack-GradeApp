@@ -167,7 +167,7 @@ public class AdminSubjectsController {
                 midtermField.clear();
             }
         });
-        midtermField.textProperty().addListener((obs, oldText, newText) -> updatePercentages());
+        midtermField.textProperty().addListener((_, _, _) -> updatePercentages());
 
         finalField.disableProperty().bind(finalCheckBox.selectedProperty().not());
         finalCheckBox.selectedProperty().addListener((_, _, selected) -> {
