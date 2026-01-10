@@ -140,6 +140,8 @@ public class AdminRegisterController {
                     courseComboBox.setManaged(true);
                     yearComboBox.setVisible(true);
                     yearComboBox.setManaged(true);
+                    subjectsComboBox.setVisible(false);
+                    subjectsComboBox.setManaged(false);
                 }
             }
         });
