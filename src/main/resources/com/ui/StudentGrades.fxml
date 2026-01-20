@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ScrollPane?>
 <BorderPane fx:id="studentBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@../css/StudentGrades.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grade_app.controllers.StudentGradesController">
    <left>
       <AnchorPane fx:id="leftAnchorPane" prefHeight="600.0" prefWidth="237.0" BorderPane.alignment="CENTER">
@@ -26,16 +27,21 @@
       </AnchorPane>
    </left>
    <center>
-      <VBox fx:id="studentCenterVbox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label fx:id="topLabel" text="Your Progress">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </Label>
-         </children>
-         <padding>
-            <Insets top="50.0" />
-         </padding></VBox>
+         <ScrollPane fx:id="scrollPane" fitToWidth="true" prefHeight="600.0" prefWidth="760.0" BorderPane.alignment="CENTER">
+            <content>
+               <VBox fx:id="studentCenterVbox" alignment="TOP_CENTER" spacing="10" prefWidth="740.0">
+                  <children>
+                     <Label fx:id="topLabel" text="Your Progress">
+                        <font>
+                           <Font size="23.0" />
+                        </font>
+                     </Label>
+                  </children>
+                  <padding>
+                     <Insets top="20.0" bottom="20.0" left="10.0" right="10.0"/>
+                  </padding>
+               </VBox>
+            </content>
+         </ScrollPane>
    </center>
 </BorderPane>

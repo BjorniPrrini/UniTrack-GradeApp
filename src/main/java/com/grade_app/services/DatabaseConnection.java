@@ -1,9 +1,6 @@
 package com.grade_app.services;
 
-import com.grade_app.model.Course;
-import com.grade_app.model.Student;
-import com.grade_app.model.Subject;
-import com.grade_app.model.User;
+import com.grade_app.model.*;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -513,5 +510,41 @@ public class DatabaseConnection {
         }
 
         return true;
+    }
+
+    public List<Subject> getSubjectsForStudent(int studentID) throws SQLException{
+        String sql = "SELECT Subjects.subjectID, Subjects.subjectName, Subjects.credits FROM Subjects, Course_Subjects, Course_Student WHERE Subjects.subjectID = Course_Subjects.subjectID AND Course_Subjects.courseID = Course_Student.courseID AND Course_Student.studentID = ? GROUP BY Subjects.subjectID, Subjects.subjectName, Subjects.credits";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setInt(1, studentID);
+
+        ResultSet result = statement.executeQuery();
+
+        List<Subject> subjects = new ArrayList<>();
+
+        while(result.next()){
+            subjects.add(new Subject(result.getInt("subjectID"), result.getString("subjectName"), result.getInt("credits")));
+        }
+
+        return subjects;
+    }
+
+    public List<Assessment> getAssessmentsForStudent(int studentID, int subjectID) throws SQLException{
+        String sql = "SELECT Subject_Assessments.subjectAssessmentID, Assessments.assessmentName, Subject_Assessments.weight, COALESCE((SELECT Grades.gradeValue FROM Grades WHERE Grades.subjectAssessmentID = Subject_Assessments.subjectAssessmentID AND Grades.studentID = ?), 0) AS gradeValue FROM Subject_Assessments, Assessments WHERE Subject_Assessments.assessmentID = Assessments.assessmentID AND Subject_Assessments.subjectID = ? AND Subject_Assessments.active = 1 ORDER BY Subject_Assessments.subjectAssessmentID";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, studentID);
+        statement.setInt(2, subjectID);
+
+        ResultSet result = statement.executeQuery();
+
+        List<Assessment> assessments = new ArrayList<>();
+
+        while(result.next()){
+            assessments.add(new Assessment(result.getInt("subjectAssessmentID"), result.getString("assessmentName"), result.getInt("weight"), result.getInt("gradeValue")));
+        }
+
+        return assessments;
     }
 }
