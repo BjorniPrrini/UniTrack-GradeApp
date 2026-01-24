@@ -30,17 +30,17 @@ public class StudentGradesController {
     private VBox studentCenterVbox;
 
     @FXML
-    public void openStudentGrades() throws IOException {
+    public void openStudentGrades() throws IOException{
         GradeApp.setRoot("StudentGrades");
     }
 
     @FXML
-    public void openStudentProfile() throws IOException {
+    public void openStudentProfile() throws IOException{
         GradeApp.setRoot("StudentProfile");
     }
 
     @FXML
-    public void logOut() throws IOException {
+    public void logOut() throws IOException{
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout Confirmation");
         alert.setHeaderText(null);
@@ -48,13 +48,13 @@ public class StudentGradesController {
 
         Optional<ButtonType> result = alert.showAndWait();
 
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        if(result.isPresent() && result.get() == ButtonType.OK){
             GradeApp.setRoot("LogInPage");
         }
     }
 
     @FXML
-    public void initialize() {
+    public void initialize(){
         studentProfileButton.setFocusTraversable(false);
         studentGradesButton.setFocusTraversable(true);
 
@@ -67,7 +67,7 @@ public class StudentGradesController {
         }
     }
 
-    private void loadStudentGrades() throws SQLException {
+    private void loadStudentGrades() throws SQLException{
         DatabaseConnection database = new DatabaseConnection();
 
         studentCenterVbox.getChildren().clear();
@@ -86,12 +86,7 @@ public class StudentGradesController {
             for(Subject subject : subjects){
                 VBox subjectCard = new VBox(5);
 
-                subjectCard.setStyle(
-                        "-fx-border-color: #2196f3;" +
-                                "-fx-border-width: 2;" +
-                                "-fx-padding: 10;" +
-                                "-fx-background-color: #e3f2fd;"
-                );
+                subjectCard.setStyle("-fx-border-color: #708dff; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: #e3f2fd;");
 
                 Label subjectLabel = createBorderedLabel(subject.getName());
 
@@ -111,28 +106,22 @@ public class StudentGradesController {
                     int grade = assessment.getGradeValue();
                     int weight = assessment.getWeight();
 
-                    double percentage = 0;
-
-                    if(weight > 0){
-                        percentage = ((double) grade / weight) * 100;
-                    }
-
                     Label assessmentLabel = createBorderedLabel(
-                            assessment.getName() + " - " + Math.round(percentage) + " / 100"
+                            assessment.getName() + " (Weight: " + weight + "%) - " + grade + " / 100"
                     );
                     subjectCard.getChildren().add(assessmentLabel);
 
-                    totalWeightedGrade += grade;
+                    totalWeightedGrade += (grade * weight);
                     totalWeight += weight;
                 }
 
-                double finalPercentage = 0;
+                double finalGrade = 0;
                 if (totalWeight > 0) {
-                    finalPercentage = (totalWeightedGrade / totalWeight) * 100;
+                    finalGrade = totalWeightedGrade / totalWeight;
                 }
 
                 Label finalLabel = createBorderedLabel(
-                        "Final Grade: " + Math.round(finalPercentage) + " / 100"
+                        "Final Grade: " + String.format("%.2f", finalGrade) + " / 100"
                 );
                 finalLabel.setStyle(finalLabel.getStyle() + "-fx-font-weight: bold; -fx-font-size: 16px;");
                 subjectCard.getChildren().add(finalLabel);
@@ -146,14 +135,10 @@ public class StudentGradesController {
         }
     }
 
-    private Label createBorderedLabel(String text) {
+    private Label createBorderedLabel(String text){
         Label label = new Label(text);
-        label.setStyle(
-                "-fx-border-color: black;" +
-                        "-fx-border-width: 1;" +
-                        "-fx-padding: 5;" +
-                        "-fx-background-color: #f0f0f0;"
-        );
+
+        label.setStyle("-fx-border-color: black; -fx-border-width: 1;-fx-padding: 5;-fx-background-color: #f0f0f0;");
 
         return label;
     }

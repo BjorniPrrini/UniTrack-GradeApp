@@ -547,4 +547,93 @@ public class DatabaseConnection {
 
         return assessments;
     }
+
+    public int getSubjectIDByName(String subjectName){
+        String sql = "SELECT subjectID FROM Subjects WHERE subjectName = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, subjectName);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return result.getInt("subjectID");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+
+    public List<StudentGrade> getStudentGradesForSubject(int subjectID){
+        List<StudentGrade> studentGrades = new ArrayList<>();
+
+        String sql = "SELECT DISTINCT Users.userID AS studentID, CONCAT(Users.name, ' ', Users.surname) AS studentName, Grades.gradeID, Grades.subjectAssessmentID, Assessments.assessmentName, Grades.gradeValue, Grades.finalized FROM Users INNER JOIN Grades ON Users.userID = Grades.studentID INNER JOIN Subject_Assessments ON Grades.subjectAssessmentID = Subject_Assessments.subjectAssessmentID INNER JOIN Assessments ON Subject_Assessments.assessmentID = Assessments.assessmentID WHERE Grades.subjectID = ? AND Subject_Assessments.active = 1 ORDER BY Users.surname, Users.name, Subject_Assessments.subjectAssessmentID";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, subjectID);
+
+            try (ResultSet result = statement.executeQuery()) {
+                while (result.next()) {
+                    studentGrades.add(new StudentGrade(result.getInt("studentID"), result.getString("studentName"), result.getInt("gradeID"), result.getInt("subjectAssessmentID"), result.getString("assessmentName"), result.getInt("gradeValue"), result.getBoolean("finalized")));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return studentGrades;
+    }
+
+    public boolean updateGrade(int gradeID, int gradeValue){
+        String sql = "UPDATE Grades SET gradeValue = ? WHERE gradeID = ? AND finalized = 0";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, gradeValue);
+            statement.setInt(2, gradeID);
+
+            int success = statement.executeUpdate();
+
+            return success > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+    }
+
+    public boolean finalizeGradesForSubject(int subjectID){
+        String sql = "UPDATE Grades SET finalized = 1 WHERE subjectID = ? AND finalized = 0";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, subjectID);
+
+            int success = statement.executeUpdate();
+
+            return success > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+    }
+
+    public boolean areGradesFinalized(int subjectID){
+        String sql = "SELECT COUNT(*) as unfinalizedCount FROM Grades WHERE subjectID = ? AND finalized = 0";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, subjectID);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if(result.next()){
+                    return result.getInt("unfinalizedCount") == 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
