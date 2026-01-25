@@ -512,12 +512,13 @@ public class DatabaseConnection {
         return true;
     }
 
-    public List<Subject> getSubjectsForStudent(int studentID) throws SQLException{
-        String sql = "SELECT Subjects.subjectID, Subjects.subjectName, Subjects.credits FROM Subjects, Course_Subjects, Course_Student WHERE Subjects.subjectID = Course_Subjects.subjectID AND Course_Subjects.courseID = Course_Student.courseID AND Course_Student.studentID = ? GROUP BY Subjects.subjectID, Subjects.subjectName, Subjects.credits";
+    public List<Subject> getSubjectsForStudent(int studentID, int studentYear) throws SQLException{
+        String sql = "SELECT Subjects.subjectID, Subjects.subjectName, Subjects.credits FROM Subjects, Course_Subjects, Course_Student WHERE Subjects.subjectID = Course_Subjects.subjectID AND Course_Subjects.courseID = Course_Student.courseID AND Course_Student.studentID = ? AND Course_Subjects.subjectYear <= ? GROUP BY Subjects.subjectID, Subjects.subjectName, Subjects.credits ORDER BY Course_Subjects.subjectYear, Subjects.subjectName";
 
         PreparedStatement statement = connection.prepareStatement(sql);
 
         statement.setInt(1, studentID);
+        statement.setInt(2, studentYear);
 
         ResultSet result = statement.executeQuery();
 
@@ -635,5 +636,24 @@ public class DatabaseConnection {
         }
 
         return false;
+    }
+
+    public Map<String, Integer> getAssessmentWeightsForSubject(int subjectID) throws SQLException {
+
+        String sql = "SELECT a.assessmentName, sa.weight FROM Subject_Assessments sa JOIN Assessments a ON sa.assessmentID = a.assessmentID WHERE sa.subjectID = ? AND sa.active = 1";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setInt(1, subjectID);
+
+        ResultSet result = statement.executeQuery();
+
+        Map<String, Integer> weights = new HashMap<>();
+
+        while(result.next()){
+            weights.put(result.getString("assessmentName"), result.getInt("weight"));
+        }
+
+        return weights;
     }
 }
