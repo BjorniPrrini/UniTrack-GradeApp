@@ -40,6 +40,11 @@ public class StudentGradesController {
     }
 
     @FXML
+    public void changePassword() throws IOException {
+        GradeApp.setRoot("PasswordChanger");
+    }
+
+    @FXML
     public void logOut() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout Confirmation");

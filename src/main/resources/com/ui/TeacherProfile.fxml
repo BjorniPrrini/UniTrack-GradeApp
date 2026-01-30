@@ -20,6 +20,7 @@
             </ImageView>
             <Button fx:id="teacherGradesButton" layoutX="1.0" layoutY="323.0" mnemonicParsing="false" onAction="#teacherGrades" prefHeight="48.0" prefWidth="254.0" text="GRADES" />
             <Button fx:id="teacherProfileButton" layoutX="1.0" layoutY="276.0" mnemonicParsing="false" onAction="#teacherProfile" prefHeight="48.0" prefWidth="254.0" text="PROFILE" />
+            <Button fx:id="chnagePassword" layoutY="239.0" mnemonicParsing="false" onAction="#changePassword" prefHeight="49.0" prefWidth="241.0" text="Change Password" />
             <Button fx:id="logOutButton" layoutY="525.0" mnemonicParsing="false" onAction="#logOut" prefHeight="47.0" prefWidth="255.0" text="LOG OUT" />
          </children>
       </AnchorPane>

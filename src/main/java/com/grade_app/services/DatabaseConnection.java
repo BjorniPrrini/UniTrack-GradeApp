@@ -656,4 +656,23 @@ public class DatabaseConnection {
 
         return weights;
     }
+
+    public boolean changePassword(String email, String oldPassword, String newPassword){
+        if(isValidUser(email, oldPassword)){
+            String sql = "UPDATE Users SET password = ? WHERE email = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                String hashedNewPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
+                statement.setString(1, hashedNewPassword);
+                statement.setString(2, email);
+
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
 }

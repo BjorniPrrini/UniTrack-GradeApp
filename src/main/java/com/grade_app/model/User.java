@@ -7,7 +7,7 @@ public class User {
     private final String email;
     private final String role;
 
-    public User(int userID, String name, String surname, String email, String role) {
+    public User(int userID, String name, String surname, String email, String role){
         this.userID = userID;
         this.name = name;
         this.surname = surname;
@@ -15,24 +15,23 @@ public class User {
         this.role = role;
     }
     
-    public int getUserID() {
+    public int getUserID(){
         return userID;
     }
 
-    public String getName() {
+    public String getName(){
         return name;
     }
 
-    public String getSurname() {
+    public String getSurname(){
         return surname;
     }
 
-    public String getEmail() {
+    public String getEmail(){
         return email;
     }
 
-    public String getRole() {
+    public String getRole(){
         return role;
     }
-
 }

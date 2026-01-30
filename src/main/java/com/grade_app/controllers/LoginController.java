@@ -6,23 +6,32 @@ import com.grade_app.model.User;
 import com.grade_app.services.DatabaseConnection;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.geometry.Side;
 
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginController {
     @FXML
     private TextField emailField;
 
     @FXML
-   private PasswordField passField;
+    private PasswordField passField;
 
     @FXML
     private Button loginButton;
+
+    private ContextMenu emailSuggestionsMenu;
+
+    @FXML
+    public void initialize(){
+        emailSuggestionsMenu = new ContextMenu();
+
+        setupEmailAutocomplete();
+    }
 
     @FXML
     public void loginHomePage() throws IOException {
@@ -34,20 +43,22 @@ public class LoginController {
         try {
             DatabaseConnection database = new DatabaseConnection();
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if(email.isEmpty() || password.isEmpty()){
                 showAlert("Login Failed", "Empty fields!");
 
                 return;
             }
 
-            if(database.isValidUser(email, password)) {
+            if(database.isValidUser(email, password)){
                 User user = database.getUser(email);
 
-                if(user == null) {
+                if(user == null){
                     showAlert("Login Failed", "User not found!");
 
                     return;
                 }
+
+                saveEmailInFile(email);
 
                 LoginUser.setUser(user);
 
@@ -78,9 +89,141 @@ public class LoginController {
         }
     }
 
+    private void saveEmailInFile(String email){
+        try{
+            File file = new File("src/main/usedEmails.txt");
+
+            boolean found = false;
+            String line;
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            while((line = reader.readLine()) != null){
+                if(line.equals(email)){
+                    found = true;
+
+                    break;
+                }
+            }
+
+            reader.close();
+
+            if(!found){
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+                writer.write(email);
+                writer.newLine();
+
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupEmailAutocomplete(){
+        emailField.setOnMouseClicked(event -> showEmailSuggestions());
+
+        emailField.focusedProperty().addListener((_, _, e) -> {
+            if(e){
+                showEmailSuggestions();
+            }
+        });
+
+        emailField.textProperty().addListener((_, _, e) -> {
+            if(emailField.isFocused()){
+                filterAndShowSuggestions(e);
+            }
+        });
+    }
+
+    private void showEmailSuggestions(){
+        List<String> emails = loadEmailsFromFile();
+
+        if(emails.isEmpty()){
+            return;
+        }
+
+        emailSuggestionsMenu.getItems().clear();
+
+        for(String email : emails){
+            MenuItem item = new MenuItem(email);
+
+            item.setOnAction(_ -> {
+                emailField.setText(email);
+                emailSuggestionsMenu.hide();
+                passField.requestFocus();
+            });
+
+            emailSuggestionsMenu.getItems().add(item);
+        }
+
+        if(!emailSuggestionsMenu.isShowing()){
+            emailSuggestionsMenu.show(emailField, Side.BOTTOM, 0, 0);
+        }
+    }
+
+    private void filterAndShowSuggestions(String text){
+        List<String> emails = loadEmailsFromFile();
+
+        if(emails.isEmpty()){
+            emailSuggestionsMenu.hide();
+
+            return;
+        }
+
+        emailSuggestionsMenu.getItems().clear();
+
+        for(String email : emails){
+            if(email.toLowerCase().contains(text.toLowerCase())){
+                MenuItem item = new MenuItem(email);
+
+                item.setOnAction(_ -> {
+                    emailField.setText(email);
+                    emailSuggestionsMenu.hide();
+                    passField.requestFocus();
+                });
+
+                emailSuggestionsMenu.getItems().add(item);
+            }
+        }
+
+        if(!emailSuggestionsMenu.getItems().isEmpty()){
+            if(!emailSuggestionsMenu.isShowing()){
+                emailSuggestionsMenu.show(emailField, Side.BOTTOM, 0, 0);
+            }
+        }else{
+            emailSuggestionsMenu.hide();
+        }
+    }
+
+    private List<String> loadEmailsFromFile(){
+        List<String> emails = new ArrayList<>();
+
+        File file = new File("src/main/usedEmails.txt");
+
+        if(!file.exists()){
+            return emails;
+        }
+
+        try {
+            String line;
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            while((line = reader.readLine()) != null){
+                if(!line.trim().isEmpty()){
+                    emails.add(line.trim());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return emails;
+    }
+
     private void showAlert(String title, String message){
         Alert alert = new Alert(Alert.AlertType.ERROR);
-
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -89,7 +232,6 @@ public class LoginController {
 
     private void showSuccessAlert(String title, String message){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

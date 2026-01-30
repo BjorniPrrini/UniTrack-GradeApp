@@ -64,18 +64,23 @@ public class AdminRegisterController {
     }
 
     @FXML
-    public void adminDelete(ActionEvent actionEvent) throws IOException {
+    public void adminDelete() throws IOException {
         GradeApp.setRoot("AdminDelete");
     }
 
     @FXML
-    public void adminAssign(ActionEvent actionEvent) throws IOException {
+    public void adminAssign() throws IOException {
         GradeApp.setRoot("AdminAssign");
     }
 
     @FXML
-    public void adminSubject(ActionEvent actionEvent) throws IOException {
+    public void adminSubject() throws IOException {
         GradeApp.setRoot("AdminSubjects");
+    }
+
+    @FXML
+    public void changePassword() throws IOException {
+        GradeApp.setRoot("PasswordChanger");
     }
 
     @FXML
@@ -95,12 +100,6 @@ public class AdminRegisterController {
     @FXML
     public void initialize() throws SQLException {
         DatabaseConnection database = new DatabaseConnection();
-
-        insertButton.setFocusTraversable(true);
-        deleteButton.setFocusTraversable(false);
-        assignButton.setFocusTraversable(false);
-        logOutButton.setFocusTraversable(false);
-        subjectButton.setFocusTraversable(false);
 
         roleComboBox.getItems().addAll("admin", "student", "teacher");
         roleComboBox.setValue("student");

@@ -9,7 +9,7 @@ public class ConnectionProvider {
     private static Connection connection;
 
     public static Connection getConnection() throws SQLException {
-        if (connection == null) {
+        if(connection == null){
             Dotenv dotenv = Dotenv.load();
 
             String url = dotenv.get("DB_URL");

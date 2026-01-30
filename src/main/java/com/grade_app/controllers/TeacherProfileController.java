@@ -3,6 +3,7 @@ package com.grade_app.controllers;
 import com.grade_app.GradeApp;
 import com.grade_app.model.LoginUser;
 import com.grade_app.services.DatabaseConnection;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -39,6 +40,11 @@ public class TeacherProfileController {
     }
 
     @FXML
+    public void changePassword() throws IOException {
+        GradeApp.setRoot("PasswordChanger");
+    }
+
+    @FXML
     public void logOut() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout Confirmation");
@@ -54,9 +60,6 @@ public class TeacherProfileController {
 
     @FXML
     public void initialize(){
-        teacherProfileButton.setFocusTraversable(true);
-        teacherGradesButton.setFocusTraversable(false);
-
         nameLabel.setText(LoginUser.getUser().getName() + " " + LoginUser.getUser().getSurname());
         emailLabel.setText(LoginUser.getUser().getEmail());
 

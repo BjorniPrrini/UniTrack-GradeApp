@@ -67,6 +67,11 @@ public class AdminAssignController {
     }
 
     @FXML
+    public void changePassword() throws IOException {
+        GradeApp.setRoot("PasswordChanger");
+    }
+
+    @FXML
     public void logOut(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout Confirmation");
@@ -78,15 +83,6 @@ public class AdminAssignController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             GradeApp.setRoot("LogInPage");
         }
-    }
-
-    @FXML
-    public void initialize() {
-        insertButton.setFocusTraversable(false);
-        deleteButton.setFocusTraversable(false);
-        assignButton.setFocusTraversable(true);
-        logOutButton.setFocusTraversable(false);
-        subjectButton.setFocusTraversable(false);
     }
 
     private String chosenSubject = "";

@@ -79,6 +79,11 @@ public class AdminDeleteController {
     }
 
     @FXML
+    public void changePassword() throws IOException {
+        GradeApp.setRoot("PasswordChanger");
+    }
+
+    @FXML
     public void logOut(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout Confirmation");
@@ -94,12 +99,6 @@ public class AdminDeleteController {
 
     @FXML
     public void initialize() throws SQLException {
-        insertButton.setFocusTraversable(false);
-        deleteButton.setFocusTraversable(true);
-        assignButton.setFocusTraversable(false);
-        logOutButton.setFocusTraversable(false);
-        subjectButton.setFocusTraversable(false);
-
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));

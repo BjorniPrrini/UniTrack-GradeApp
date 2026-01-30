@@ -25,6 +25,7 @@
             <Button fx:id="assignButton" layoutY="333.0" mnemonicParsing="false" onAction="#adminAssign" prefHeight="48.0" prefWidth="242.0" text="ASSIGN/DELETE" />
             <Button fx:id="logOutButton" layoutX="-1.0" layoutY="542.0" mnemonicParsing="false" onAction="#logOut" prefHeight="49.0" prefWidth="243.0" text="LOG OUT" />
             <Button fx:id="subjectButton" layoutY="381.0" mnemonicParsing="false" onAction="#adminSubject" prefHeight="49.0" prefWidth="241.0" text="SUBJECT" />
+            <Button fx:id="changePassword" onAction="#changePassword" layoutY="430.0" prefHeight="49.0" prefWidth="241.0" text="Change Password" />
          </children>
       </AnchorPane>
    </left>
