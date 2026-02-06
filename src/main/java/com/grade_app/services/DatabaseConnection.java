@@ -667,7 +667,11 @@ public class DatabaseConnection {
                 statement.setString(1, hashedNewPassword);
                 statement.setString(2, email);
 
-                return true;
+                statement.executeUpdate();
+
+                int rowsAffected = statement.executeUpdate();
+
+                return rowsAffected == 1;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
