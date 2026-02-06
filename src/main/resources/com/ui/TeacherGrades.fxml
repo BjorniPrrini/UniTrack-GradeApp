@@ -22,7 +22,7 @@
             </ImageView>
             <Button fx:id="teacherGradesButton" layoutX="1.0" layoutY="323.0" mnemonicParsing="false" onAction="#teacherGrades" prefHeight="48.0" prefWidth="254.0" text="GRADES" />
             <Button fx:id="teacherProfileButton" layoutX="1.0" layoutY="276.0" mnemonicParsing="false" onAction="#teacherProfile" prefHeight="48.0" prefWidth="254.0" text="PROFILE" />
-            <Button fx:id="changePassword" layoutY="229.0" mnemonicParsing="false" onAction="#changePassword" prefHeight="49.0" prefWidth="241.0" text="Change Password" />
+            <Button fx:id="changePassword" layoutX="2.0" layoutY="371.0" mnemonicParsing="false" onAction="#changePassword" prefHeight="49.0" prefWidth="254.0" text="Change Password" />
             <Button fx:id="logOutButton" layoutY="525.0" mnemonicParsing="false" onAction="#logOut" prefHeight="47.0" prefWidth="255.0" text="LOG OUT" />
          </children>
       </AnchorPane>
@@ -36,9 +36,9 @@
                </VBox.margin>
             </ComboBox>
             <TableView fx:id="studentGradeTable" editable="true" maxWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" />
-            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="700.0" spacing="30.0">
+            <HBox alignment="CENTER" prefHeight="94.0" prefWidth="714.0" spacing="30.0">
                <children>
-                  <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="39.0" prefWidth="150.0" text="Submit Changes" />
+                  <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="150.0" text="Submit Changes" />
                   <Button fx:id="finalizeButton" mnemonicParsing="false" prefHeight="39.0" prefWidth="150.0" text="Finalize Grades" />
                </children>
                <VBox.margin>

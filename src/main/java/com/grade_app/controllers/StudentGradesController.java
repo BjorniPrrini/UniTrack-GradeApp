@@ -114,18 +114,18 @@ public class StudentGradesController {
     private VBox createSubjectCard(Subject subject, int studentID, DatabaseConnection database) throws SQLException{
         VBox subjectCard = new VBox(8);
         subjectCard.setStyle(
-                "-fx-border-color: #708dff; -fx-border-width: 2; -fx-padding: 15; -fx-background-color: #e3f2fd; -fx-background-radius: 5; -fx-border-radius: 5;"
+                "-fx-border-color: #c0875c; -fx-border-width: 2; -fx-padding: 15; -fx-background-color: #E9C68A; -fx-background-radius: 5; -fx-border-radius: 5;"
         );
 
         Label subjectLabel = createLabel(subject.getName());
         subjectLabel.setStyle(
-                subjectLabel.getStyle() + "-fx-font-size: 18px; -fx-font-weight: bold; -fx-background-color: #bbdefb;"
+                subjectLabel.getStyle() + "-fx-font-size: 18px; -fx-font-weight: bold; -fx-background-color: #c0875c; -fx-text-fill: white; -fx-border-color: white;"
         );
         subjectCard.getChildren().add(subjectLabel);
 
         Label assessmentsHeader = createLabel("Assessments:");
         assessmentsHeader.setStyle(
-                assessmentsHeader.getStyle() + "-fx-font-weight: bold; -fx-background-color: #e1f5fe;"
+                assessmentsHeader.getStyle() + "-fx-font-weight: bold; -fx-background-color: white; -fx-border-color:#c0875c; -fx-border-width: 2;"
         );
         subjectCard.getChildren().add(assessmentsHeader);
 
@@ -159,7 +159,7 @@ public class StudentGradesController {
     private Label createLabel(String text){
         Label label = new Label(text);
 
-        label.setStyle("-fx-border-color: #90a4ae; -fx-border-width: 1; -fx-padding: 8; -fx-background-color: #f5f5f5; -fx-border-radius: 3; -fx-background-radius: 3;"
+        label.setStyle("-fx-border-color: #c0875c; -fx-border-width: 1; -fx-padding: 8; -fx-background-color: white; -fx-border-radius: 3; -fx-background-radius: 3;"
         );
 
         return label;

@@ -675,4 +675,139 @@ public class DatabaseConnection {
 
         return false;
     }
+    // 1. Get all active assessments for a subject (without JOIN)
+    public Map<Integer, Integer> getSubjectAssessmentWeights(int subjectID) {
+        Map<Integer, Integer> weights = new HashMap<>();
+        String sql = "SELECT subjectAssessmentID, weight FROM Subject_Assessments WHERE subjectID = ? AND active = 1";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, subjectID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int subAssID = rs.getInt("subjectAssessmentID");
+                int weight = rs.getInt("weight");
+                weights.put(subAssID, weight);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return weights;
+    }
+
+    // 2. Get assessment name from subjectAssessmentID
+    public String getAssessmentName(int subjectAssessmentID) {
+        String name = "";
+        String sql = "SELECT assessmentName FROM Assessments WHERE assessmentID = " +
+                "(SELECT assessmentID FROM Subject_Assessments WHERE subjectAssessmentID = ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, subjectAssessmentID);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                name = rs.getString("assessmentName");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
+
+    // 3. Get the student's grade for a given subjectAssessmentID
+    public int getStudentGrade(int studentID, int subjectAssessmentID) {
+        int grade = 0;
+        String sql = "SELECT gradeValue FROM Grades WHERE studentID = ? AND subjectAssessmentID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, studentID);
+            stmt.setInt(2, subjectAssessmentID);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                grade = rs.getInt("gradeValue");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return grade;
+    }
+
+    // Optional helper: get courseID from courseName
+    public int getCourseIDByName(String courseName){
+        int id = -1;
+        String sql = "SELECT courseID FROM Courses WHERE courseName = ?";
+        try(PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, courseName);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                id = rs.getInt("courseID");
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return id;
+    }
+    public int getStudentGrade(int studentID, int subjectID, String assessmentName) {
+        try {
+            // 1️⃣ Get assessmentID from Assessments table
+            int assessmentID = -1;
+            String sql1 = "SELECT assessmentID FROM Assessments WHERE assessmentName = ?";
+            try (PreparedStatement stmt1 = connection.prepareStatement(sql1)) {
+                stmt1.setString(1, assessmentName);
+                ResultSet rs1 = stmt1.executeQuery();
+                if (rs1.next()) assessmentID = rs1.getInt("assessmentID");
+            }
+            if (assessmentID == -1) return -1; // assessment not found
+
+            // 2️⃣ Get subjectAssessmentID from Subject_Assessments table
+            int subjectAssessmentID = -1;
+            String sql2 = "SELECT subjectAssessmentID FROM Subject_Assessments WHERE subjectID = ? AND assessmentID = ? AND active = 1";
+            try (PreparedStatement stmt2 = connection.prepareStatement(sql2)) {
+                stmt2.setInt(1, subjectID);
+                stmt2.setInt(2, assessmentID);
+                ResultSet rs2 = stmt2.executeQuery();
+                if (rs2.next()) subjectAssessmentID = rs2.getInt("subjectAssessmentID");
+            }
+            if (subjectAssessmentID == -1) return -1; // no active assessment
+
+            // 3️⃣ Get gradeValue from Grades table
+            String sql3 = "SELECT gradeValue FROM Grades WHERE studentID = ? AND subjectAssessmentID = ?";
+            try (PreparedStatement stmt3 = connection.prepareStatement(sql3)) {
+                stmt3.setInt(1, studentID);
+                stmt3.setInt(2, subjectAssessmentID);
+                ResultSet rs3 = stmt3.executeQuery();
+                if (rs3.next()) return rs3.getInt("gradeValue");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; // no grade yet
+    }
+    public List<Subject> getSubjectsForStudentUpToYear(int studentID, int year) {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = """
+        SELECT s.subjectID, s.subjectName, s.credits
+        FROM Subjects s
+        JOIN Course_Subjects cs ON cs.subjectID = s.subjectID
+        JOIN Course_Student cst ON cst.courseID = cs.courseID
+        WHERE cst.studentID = ?
+          AND cs.subjectYear <= ?
+    """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, studentID);
+            stmt.setInt(2, year);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                subjects.add(new Subject(
+                        rs.getInt("subjectID"),
+                        rs.getString("subjectName"),
+                        rs.getInt("credits")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subjects;
+    }
+
 }

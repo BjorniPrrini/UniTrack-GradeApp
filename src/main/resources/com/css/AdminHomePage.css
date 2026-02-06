@@ -15,7 +15,8 @@
 #insertButton,
 #deleteButton,
 #assignButton,
-#subjectButton {
+#subjectButton,
+#changePassword{
     -fx-background-color: transparent;
     -fx-text-fill: black;
     -fx-font-size: 14px;
@@ -31,7 +32,8 @@
 #insertButton:hover,
 #deleteButton:hover,
 #assignButton:hover,
-#subjectButton:hover {
+#subjectButton:hover,
+#changePassword:hover{
     -fx-background-color: #D8A55B;
     -fx-text-fill: black;
 }

@@ -79,4 +79,20 @@
     -fx-border-radius: 12;
     -fx-alignment: CENTER_LEFT;
 }
+#changePassword{
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-width: 2;
+    -fx-border-color: #D8A55B;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-alignment: CENTER;
+    -fx-cursor: hand;
+}
+#changePassword:hover {
+    -fx-border-color: #D8A55B;;
+    -fx-text-fill: black;
+}
 

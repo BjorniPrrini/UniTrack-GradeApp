@@ -84,5 +84,16 @@
 #assignCenterVbox Button:hover {
     -fx-background-color: linear-gradient(to right, #c0875c, #D8A55B);
 }
+#changePasswordButton Button{
+    -fx-background-color: linear-gradient(to right, #D8A55B, #c0875c);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+#changePasswordButton Button:hover {
+    -fx-background-color: linear-gradient(to right, #c0875c, #D8A55B);
+}
 
 
