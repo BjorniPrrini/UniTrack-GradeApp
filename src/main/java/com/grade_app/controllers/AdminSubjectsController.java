@@ -272,9 +272,7 @@ public class AdminSubjectsController {
             }else{
                 showAlert("Error" ,"Assessment was not successfully placed!");
             }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (NumberFormatException | SQLException e) {
             e.printStackTrace();
         } finally {
             submitButton.setDisable(false);

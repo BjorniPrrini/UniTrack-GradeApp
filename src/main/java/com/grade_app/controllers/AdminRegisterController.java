@@ -89,8 +89,6 @@ public class AdminRegisterController {
 
         courseComboBox.getItems().addAll(courses);
 
-        yearComboBox.getItems().addAll(1, 2, 3, 4, 5);
-
         generatedEmailField.setEditable(false);
         generatedPasswordField.setEditable(false);
 
@@ -126,13 +124,31 @@ public class AdminRegisterController {
             }
         });
 
-        courseComboBox.getSelectionModel().selectedItemProperty().addListener((_, _, newCourse) -> {
-            if(newCourse != null && "teacher".equals(roleComboBox.getValue())){
-                List<Subject> subjects = database.getSubjects(newCourse.getId());
+        courseComboBox.getSelectionModel().selectedItemProperty().addListener((_, _, course) -> {
+            if(course != null && "teacher".equals(roleComboBox.getValue())){
+                List<Subject> subjects = database.getSubjects(course.getId());
 
                 subjectsComboBox.getItems().setAll(subjects);
+            }else if("student".equalsIgnoreCase(roleComboBox.getValue())){
+                updateYearComboBox(course);
             }
         });
+    }
+
+    private void updateYearComboBox(Course course){
+        yearComboBox.getItems().clear();
+
+        if(course != null){
+            int duration = course.getDuration();
+
+            for(int i = 1; i <= duration; i++){
+                yearComboBox.getItems().add(i);
+            }
+
+            if(yearComboBox.getItems().isEmpty()){
+                yearComboBox.setValue(1);
+            }
+        }
     }
 
     @FXML

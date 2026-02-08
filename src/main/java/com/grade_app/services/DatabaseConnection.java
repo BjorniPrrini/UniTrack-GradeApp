@@ -74,13 +74,13 @@ public class DatabaseConnection {
     public List<Course> getCourses(){
         List<Course> courses = new ArrayList<>();
 
-        String sql = "SELECT courseID, courseName FROM Courses";
+        String sql = "SELECT courseID, courseName, duration FROM Courses";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet result = statement.executeQuery();
 
             while(result.next()){
-                courses.add(new Course(result.getInt("courseID"), result.getString("courseName")));
+                courses.add(new Course(result.getInt("courseID"), result.getString("courseName"), result.getInt("duration")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

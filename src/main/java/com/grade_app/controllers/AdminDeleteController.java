@@ -42,6 +42,8 @@ public class AdminDeleteController {
     @FXML
     private Button delete;
 
+    private User selectedUser;
+
     @FXML
     public void adminRegister() throws IOException {
         GradeApp.setRoot("AdminRegister");
@@ -93,14 +95,31 @@ public class AdminDeleteController {
         ObservableList<User> users = FXCollections.observableArrayList(database.getAllUsers());
 
         userTable.setItems(users);
+
+        userTable.getSelectionModel().selectedItemProperty().addListener((_, _, selected) -> {
+            if(selected != null){
+                selectedUser = selected;
+
+                nameField.setText(selectedUser.getName());
+                surnameField.setText(selectedUser.getSurname());
+            }
+        });
     }
 
     @FXML
     public void searchUser() {
         search.setDisable(true);
 
-        String name = nameField.getText();
-        String surname = surnameField.getText();
+        String name = nameField.getText().trim();
+        String surname = surnameField.getText().trim();
+
+        if(name.isEmpty() || surname.isEmpty()){
+            showAlert("Empty Fields", "Please enter both name and surname!");
+
+            search.setDisable(false);
+
+            return;
+        }
 
         try{
             DatabaseConnection database = new DatabaseConnection();
@@ -111,13 +130,19 @@ public class AdminDeleteController {
 
             if(user != null){
                 userList.add(user);
+
+                selectedUser = user;
             }else{
                 showAlert("User not found", "User was not found!");
+
+                selectedUser = null;
             }
 
             userTable.setItems(userList);
         } catch(SQLException e) {
             e.printStackTrace();
+
+            showAlert("Database Error", "An error occurred while searching for the user!");
         } finally {
             search.setDisable(false);
         }
@@ -127,16 +152,37 @@ public class AdminDeleteController {
     public void deleteUser() {
         delete.setDisable(true);
 
-        String name = nameField.getText();
-        String surname = surnameField.getText();
+        if(selectedUser == null){
+            showAlert("No User Selected", "Please select a user from the table or search for one first!");
+
+            delete.setDisable(false);
+
+            return;
+        }
+
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Delete Confirmation");
+        confirmAlert.setHeaderText(null);
+        confirmAlert.setContentText("Are you sure you want to delete user:\n" + selectedUser.getName() + " " + selectedUser.getSurname() + "\n" + selectedUser.getEmail() + "?");
+
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+
+        if(result.isEmpty() || result.get() != ButtonType.OK){
+
+            delete.setDisable(false);
+
+            return;
+        }
 
         try{
             DatabaseConnection database = new DatabaseConnection();
 
-            boolean success = database.deleteUser(name, surname);
+            boolean success = database.deleteUser(selectedUser.getName(), selectedUser.getSurname());
 
             if(success){
                 showSuccessAlert("User deleted", "User was successfully deleted!");
+
+                clearSelection();
 
                 initialize();
             }else{
@@ -144,8 +190,26 @@ public class AdminDeleteController {
             }
         } catch(SQLException e) {
             e.printStackTrace();
+
+            showAlert("Database Error", "An error occurred while deleting the user!");
         } finally {
             delete.setDisable(false);
+        }
+    }
+
+    @FXML
+    public void clearSelection(){
+        nameField.clear();
+        surnameField.clear();
+        selectedUser = null;
+        userTable.getSelectionModel().clearSelection();
+
+        try {
+            initialize();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            showAlert("Database Error", "An error occurred while reloading users!");
         }
     }
 

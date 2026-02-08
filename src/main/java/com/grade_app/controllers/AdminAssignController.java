@@ -153,6 +153,8 @@ public class AdminAssignController {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+            loadSubjects();
+
             submitButton.setDisable(false);
         }
     }
