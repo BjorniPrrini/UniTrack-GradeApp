@@ -7,7 +7,6 @@ import com.grade_app.services.DatabaseConnection;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 
@@ -16,12 +15,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class StudentProfileController {
-    @FXML
-    private Button studentProfileButton;
-
-    @FXML
-    private Button studentGradesButton;
-
     @FXML
     private Label studentNameLabel;
 
@@ -77,6 +70,5 @@ public class StudentProfileController {
         }catch (SQLException e){
             e.printStackTrace();
         }
-
     }
 }

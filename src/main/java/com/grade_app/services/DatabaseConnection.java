@@ -48,7 +48,7 @@ public class DatabaseConnection {
             statement.setString(1, email);
 
             try (ResultSet result = statement.executeQuery()) {
-                if (result.next()) {
+                if(result.next()){
                     int userID = result.getInt("userID");
                     String name = result.getString("name");
                     String surname = result.getString("surname");
@@ -335,6 +335,7 @@ public class DatabaseConnection {
 
     public boolean submitAssignedSubject(int teacherID, String chosenSubject, String choice) {
         String sql1 = "SELECT subjectID, (SELECT courseID FROM Course_Subjects WHERE subjectID = Subjects.subjectID) AS courseID FROM Subjects WHERE subjectName = ?";
+
         int subjectID = -1;
         int courseID = -1;
 
@@ -342,10 +343,10 @@ public class DatabaseConnection {
             statement1.setString(1, chosenSubject);
 
             try (ResultSet result1 = statement1.executeQuery()) {
-                if (result1.next()) {
+                if(result1.next()){
                     subjectID = result1.getInt("subjectID");
                     courseID = result1.getInt("courseID");
-                } else {
+                }else{
                     return false;
                 }
             }
@@ -440,7 +441,7 @@ public class DatabaseConnection {
             return false;
         }
 
-        if (assessmentID == -1) {
+        if(assessmentID == -1){
             String sql2 = "INSERT INTO Assessments (assessmentName) VALUES (?)";
 
             try (PreparedStatement statement = connection.prepareStatement(sql2, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -448,7 +449,7 @@ public class DatabaseConnection {
                 statement.executeUpdate();
 
                 try (ResultSet keys = statement.getGeneratedKeys()) {
-                    if (keys.next()) {
+                    if(keys.next()){
                         assessmentID = keys.getInt(1);
                     }
                 }
@@ -556,7 +557,7 @@ public class DatabaseConnection {
             statement.setString(1, subjectName);
 
             try (ResultSet result = statement.executeQuery()) {
-                if (result.next()) {
+                if(result.next()){
                     return result.getInt("subjectID");
                 }
             }

@@ -26,9 +26,13 @@ public class LoginController {
 
     private ContextMenu emailSuggestionsMenu;
 
+    private List<String> emails = new ArrayList<>();
+
     @FXML
     public void initialize(){
         emailSuggestionsMenu = new ContextMenu();
+
+        emails = loadEmailsFromFile();
 
         setupEmailAutocomplete();
     }
@@ -112,6 +116,7 @@ public class LoginController {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
                 writer.write(email);
                 writer.newLine();
+                emails.add(email);
 
                 writer.close();
             }
@@ -121,7 +126,7 @@ public class LoginController {
     }
 
     private void setupEmailAutocomplete(){
-        emailField.setOnMouseClicked(event -> showEmailSuggestions());
+        emailField.setOnMouseClicked(_ -> showEmailSuggestions());
 
         emailField.focusedProperty().addListener((_, _, e) -> {
             if(e){
@@ -137,8 +142,6 @@ public class LoginController {
     }
 
     private void showEmailSuggestions(){
-        List<String> emails = loadEmailsFromFile();
-
         if(emails.isEmpty()){
             return;
         }
@@ -163,8 +166,6 @@ public class LoginController {
     }
 
     private void filterAndShowSuggestions(String text){
-        List<String> emails = loadEmailsFromFile();
-
         if(emails.isEmpty()){
             emailSuggestionsMenu.hide();
 
@@ -215,6 +216,8 @@ public class LoginController {
                     emails.add(line.trim());
                 }
             }
+
+            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

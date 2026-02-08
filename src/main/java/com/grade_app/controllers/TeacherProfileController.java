@@ -15,12 +15,6 @@ import java.util.Optional;
 
 public class TeacherProfileController {
     @FXML
-    private Button teacherGradesButton;
-
-    @FXML
-    private Button teacherProfileButton;
-
-    @FXML
     private Label nameLabel;
 
     @FXML
@@ -53,7 +47,7 @@ public class TeacherProfileController {
 
         Optional<ButtonType> result = alert.showAndWait();
 
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        if(result.isPresent() && result.get() == ButtonType.OK){
             GradeApp.setRoot("LogInPage");
         }
     }
@@ -78,6 +72,5 @@ public class TeacherProfileController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 }

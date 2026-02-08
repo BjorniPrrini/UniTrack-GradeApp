@@ -5,7 +5,6 @@ import com.grade_app.model.Course;
 import com.grade_app.model.Subject;
 import com.grade_app.services.DatabaseConnection;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -15,21 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 
 public class AdminSubjectsController {
-    @FXML
-    private Button insertButton;
-
-    @FXML
-    private Button deleteButton;
-
-    @FXML
-    private Button assignButton;
-
-    @FXML
-    private Button logOutButton;
-
-    @FXML
-    private Button subjectButton;
-
     @FXML
     private ComboBox<Course> coursesComboBox;
 
@@ -101,7 +85,7 @@ public class AdminSubjectsController {
     }
 
     @FXML
-    public void logOut(ActionEvent actionEvent) throws IOException {
+    public void logOut() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout Confirmation");
         alert.setHeaderText(null);

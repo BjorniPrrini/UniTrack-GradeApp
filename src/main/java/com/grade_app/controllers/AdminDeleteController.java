@@ -6,7 +6,6 @@ import com.grade_app.services.DatabaseConnection;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,21 +15,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class AdminDeleteController {
-    @FXML
-    private Button insertButton;
-
-    @FXML
-    private Button deleteButton;
-
-    @FXML
-    private Button assignButton;
-
-    @FXML
-    private Button logOutButton;
-
-    @FXML
-    private Button subjectButton;
-
     @FXML
     private TextField nameField;
 
@@ -64,17 +48,17 @@ public class AdminDeleteController {
     }
 
     @FXML
-    public void adminDelete(ActionEvent actionEvent) throws IOException {
+    public void adminDelete() throws IOException {
         GradeApp.setRoot("AdminDelete");
     }
 
     @FXML
-    public void adminAssign(ActionEvent actionEvent) throws IOException {
+    public void adminAssign() throws IOException {
         GradeApp.setRoot("AdminAssign");
     }
 
     @FXML
-    public void adminSubject(ActionEvent actionEvent) throws IOException {
+    public void adminSubject() throws IOException {
         GradeApp.setRoot("AdminSubjects");
     }
 
@@ -84,7 +68,7 @@ public class AdminDeleteController {
     }
 
     @FXML
-    public void logOut(ActionEvent actionEvent) throws IOException {
+    public void logOut() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout Confirmation");
         alert.setHeaderText(null);
@@ -122,11 +106,12 @@ public class AdminDeleteController {
             DatabaseConnection database = new DatabaseConnection();
 
             User user = database.searchUser(name, surname);
+
             ObservableList<User> userList = FXCollections.observableArrayList();
 
-            if (user != null) {
+            if(user != null){
                 userList.add(user);
-            } else {
+            }else{
                 showAlert("User not found", "User was not found!");
             }
 
@@ -152,6 +137,7 @@ public class AdminDeleteController {
 
             if(success){
                 showSuccessAlert("User deleted", "User was successfully deleted!");
+
                 initialize();
             }else{
                 showAlert("Error", "User was not deleted!");

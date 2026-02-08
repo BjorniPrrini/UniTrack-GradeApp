@@ -21,12 +21,6 @@ import java.util.*;
 
 public class TeacherGradesController {
     @FXML
-    private Button teacherGradesButton;
-
-    @FXML
-    private Button teacherProfileButton;
-
-    @FXML
     private ComboBox<String> subjectComboBox;
 
     @FXML
@@ -243,7 +237,7 @@ public class TeacherGradesController {
             double tableWidth = newWidth.doubleValue();
             int numCols = studentGradeTable.getColumns().size();
 
-            if (numCols < 2){
+            if(numCols < 2){
                 return;
             }
 

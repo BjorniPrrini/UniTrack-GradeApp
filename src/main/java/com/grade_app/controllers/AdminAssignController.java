@@ -4,7 +4,6 @@ import com.grade_app.GradeApp;
 import com.grade_app.model.User;
 import com.grade_app.services.DatabaseConnection;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -13,21 +12,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class AdminAssignController {
-    @FXML
-    private Button insertButton;
-
-    @FXML
-    private Button deleteButton;
-
-    @FXML
-    private Button assignButton;
-
-    @FXML
-    private Button logOutButton;
-
-    @FXML
-    private Button subjectButton;
-
     @FXML
     private TextField teacherNameField;
 
@@ -52,17 +36,17 @@ public class AdminAssignController {
     }
 
     @FXML
-    public void adminDelete(ActionEvent actionEvent) throws IOException {
+    public void adminDelete() throws IOException {
         GradeApp.setRoot("AdminDelete");
     }
 
     @FXML
-    public void adminAssign(ActionEvent actionEvent) throws IOException {
+    public void adminAssign() throws IOException {
         GradeApp.setRoot("AdminAssign");
     }
 
     @FXML
-    public void adminSubject(ActionEvent actionEvent) throws IOException {
+    public void adminSubject() throws IOException {
         GradeApp.setRoot("AdminSubjects");
     }
 
@@ -72,7 +56,7 @@ public class AdminAssignController {
     }
 
     @FXML
-    public void logOut(ActionEvent actionEvent) throws IOException {
+    public void logOut() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout Confirmation");
         alert.setHeaderText(null);
@@ -117,13 +101,13 @@ public class AdminAssignController {
             if(choice.equalsIgnoreCase("Add")){
                 subjectComboBox.getItems().clear();
                 subjectComboBox.getItems().addAll(database.getSubjectNotInTeacher(teacherID));
-                subjectComboBox.setOnAction(e -> {
+                subjectComboBox.setOnAction(_ -> {
                     chosenSubject = subjectComboBox.getValue();
                 });
             }else if(choice.equalsIgnoreCase("Delete")){
                 subjectComboBox.getItems().clear();
                 subjectComboBox.getItems().addAll(database.getSubjectInTeacher(teacherID));
-                subjectComboBox.setOnAction(e -> {
+                subjectComboBox.setOnAction(_ -> {
                     chosenSubject = subjectComboBox.getValue();
                 });
             }
@@ -155,6 +139,7 @@ public class AdminAssignController {
             String surname = teacherSurnameField.getText();
 
             User teacher = database.searchUser(name, surname);
+
             int teacherID = teacher.getUserID();
 
             boolean successful = database.submitAssignedSubject(teacherID, chosenSubject, choice);

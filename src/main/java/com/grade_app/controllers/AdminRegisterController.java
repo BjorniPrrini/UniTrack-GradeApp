@@ -5,7 +5,6 @@ import com.grade_app.model.Course;
 import com.grade_app.model.Subject;
 import com.grade_app.services.DatabaseConnection;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -16,21 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class AdminRegisterController {
-    @FXML
-    private Button insertButton;
-
-    @FXML
-    private Button deleteButton;
-
-    @FXML
-    private Button assignButton;
-
-    @FXML
-    private Button logOutButton;
-
-    @FXML
-    private Button subjectButton;
-
     @FXML
     private TextField nameField;
 
@@ -54,9 +38,6 @@ public class AdminRegisterController {
 
     @FXML
     private TextField generatedPasswordField;
-
-    @FXML
-    private Button registerButton;
 
     @FXML
     public void adminRegister() throws IOException {
@@ -84,7 +65,7 @@ public class AdminRegisterController {
     }
 
     @FXML
-    public void logOut(ActionEvent actionEvent) throws IOException {
+    public void logOut() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout Confirmation");
         alert.setHeaderText(null);
@@ -146,7 +127,7 @@ public class AdminRegisterController {
         });
 
         courseComboBox.getSelectionModel().selectedItemProperty().addListener((_, _, newCourse) -> {
-            if (newCourse != null && "teacher".equals(roleComboBox.getValue())) {
+            if(newCourse != null && "teacher".equals(roleComboBox.getValue())){
                 List<Subject> subjects = database.getSubjects(newCourse.getId());
 
                 subjectsComboBox.getItems().setAll(subjects);
@@ -160,6 +141,7 @@ public class AdminRegisterController {
         String surname = surnameField.getText();
 
         int year = LocalDate.now().getYear() % 100;
+
         String email = name.toLowerCase() + surname.toLowerCase() + year + "@gmail.com";
 
         String password = name.toLowerCase() + surname.toLowerCase() + year;
@@ -173,7 +155,7 @@ public class AdminRegisterController {
         String name = nameField.getText();
         String surname = surnameField.getText();
 
-        if (name == null || name.isEmpty() || surname == null || surname.isEmpty()) {
+        if(name == null || name.isEmpty() || surname == null || surname.isEmpty()){
             showAlert("Empty fields", "The name or surname field is empty!");
 
             return;
@@ -201,7 +183,7 @@ public class AdminRegisterController {
 
             boolean success = database.adminRegister(name, surname, email, password, role, year, course, subject);
 
-            if (success) {
+            if(success){
                 showSuccessAlert("Registered", "User registered successfully!");
                 nameField.clear();
                 surnameField.clear();
@@ -217,7 +199,7 @@ public class AdminRegisterController {
                 yearComboBox.setManaged(true);
                 subjectsComboBox.setVisible(false);
                 subjectsComboBox.setManaged(false);
-            } else {
+            }else{
                 showAlert("Error", "User could not be registered!");
             }
         } catch (SQLException e) {

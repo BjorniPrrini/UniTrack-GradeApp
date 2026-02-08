@@ -10,7 +10,6 @@ import com.grade_app.services.DatabaseConnection;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -20,12 +19,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class StudentGradesController {
-    @FXML
-    private Button studentProfileButton;
-
-    @FXML
-    private Button studentGradesButton;
-
     @FXML
     private VBox studentCenterVbox;
 
