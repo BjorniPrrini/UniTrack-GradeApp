@@ -4,6 +4,7 @@ import com.grade_app.GradeApp;
 import com.grade_app.model.LoginUser;
 import com.grade_app.model.StudentGrade;
 import com.grade_app.model.StudentRow;
+import com.grade_app.model.Assessment;
 import com.grade_app.services.DatabaseConnection;
 
 import javafx.beans.property.SimpleIntegerProperty;
@@ -32,13 +33,21 @@ public class TeacherGradesController {
     @FXML
     private Button finalizeButton;
 
+    private ObservableList<StudentRow> studentRows;
+    private List<String> assessmentNames = new ArrayList<>();
+    private boolean gradesFinalized = false;
+
+    private static final int MIN_GRADE = 0;
+    private static final int MAX_GRADE = 100;
+    private static final int MIN_COLUMN_WIDTH = 80;
+
     @FXML
-    public void teacherGrades() throws IOException{
+    public void teacherGrades() throws IOException {
         GradeApp.setRoot("TeacherGrades");
     }
 
     @FXML
-    public void teacherProfile() throws IOException{
+    public void teacherProfile() throws IOException {
         GradeApp.setRoot("TeacherProfile");
     }
 
@@ -48,54 +57,38 @@ public class TeacherGradesController {
     }
 
     @FXML
-    public void logOut() throws IOException{
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Logout Confirmation");
-        confirm.setHeaderText(null);
-        confirm.setContentText("Are you sure you want to log out?");
+    public void logOut() throws IOException {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to log out?", ButtonType.OK, ButtonType.CANCEL);
 
         if(confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK){
             GradeApp.setRoot("LogInPage");
         }
     }
 
-    private ObservableList<StudentRow> studentRows;
-    private List<String> assessmentNames;
-    private Map<String, Integer> assessmentWeights;
-    private boolean gradesFinalized;
-    private boolean isTableListenerAdded = false;
-
     @FXML
-    public void initialize(){
-        studentGradeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
+    public void initialize() {
+        studentGradeTable.setEditable(true);
         loadSubjects();
 
-        setupEventHandlers();
+        subjectComboBox.setOnAction(e -> loadGrades());
+        submitButton.setOnAction(e -> saveGrades());
+        finalizeButton.setOnAction(e -> finalizeGrades());
     }
 
-    private void loadSubjects(){
+    private void loadSubjects() {
         try {
             DatabaseConnection database = new DatabaseConnection();
 
-            List<String> subjects = database.getSubjectInTeacher(LoginUser.getUser().getUserID());
-
-            subjectComboBox.getItems().addAll(subjects);
+            subjectComboBox.getItems().addAll(database.getSubjectInTeacher(LoginUser.getUser().getUserID()));
         } catch (SQLException e) {
-            showError("Failed to load subjects", "Subjects could not be loaded!");
+            showError("Load Error", "Could not load subjects.");
         }
     }
 
-    private void setupEventHandlers() {
-        subjectComboBox.setOnAction(e -> loadGradesForSelectedSubject());
-        submitButton.setOnAction(e -> saveGrades());
-        finalizeButton.setOnAction(e -> finalized());
-    }
-
-    private void loadGradesForSelectedSubject() {
+    private void loadGrades() {
         String subject = subjectComboBox.getValue();
 
-        if(subject == null || subject.trim().isEmpty()){
+        if(subject == null){
             return;
         }
 
@@ -105,258 +98,282 @@ public class TeacherGradesController {
             int subjectID = database.getSubjectIDByName(subject);
 
             gradesFinalized = database.areGradesFinalized(subjectID);
-            assessmentWeights = database.getAssessmentWeightsForSubject(subjectID);
 
             List<StudentGrade> grades = database.getStudentGradesForSubject(subjectID);
 
             if(grades.isEmpty()){
                 clearTable();
 
-                showInfo("No Data", "No students or assessments found for this subject.");
+                showInfo("No Data", "No grades found for this subject.");
 
                 return;
             }
 
-            buildTable(grades);
+            buildTable(grades, subjectID);
 
-            updateUIState();
+            updateUI();
         } catch (Exception e) {
-            showError("Error Loading Grades", "Grades could not be loaded!");
+            showError("Load Error", "Failed to load grades.");
+
+            e.printStackTrace();
         }
     }
 
-    private void buildTable(List<StudentGrade> grades){
-        assessmentNames = extractAssessmentNames(grades);
+    private void buildTable(List<StudentGrade> grades, int subjectID) throws SQLException {
+        DatabaseConnection database = new DatabaseConnection();
 
-        Map<Integer, StudentRow> studentMap = groupByStudent(grades);
+        List<Assessment> assessmentList = database.getAssessmentWeightsForSubject(subjectID);
 
-        studentRows = FXCollections.observableArrayList(studentMap.values());
+        List<StudentRow> rows = new ArrayList<>();
 
-        for(StudentRow row : studentRows){
-            row.calculateAverage(assessmentNames, assessmentWeights);
+        assessmentNames.clear();
+
+        for(Assessment assessment : assessmentList){
+            String assessmentName = assessment.getName();
+
+            if(!assessmentNames.contains(assessmentName)){
+                assessmentNames.add(assessmentName);
+            }
         }
+
+        for(StudentGrade grade : grades){
+            int studentId = grade.getStudentID();
+            String studentName = grade.getStudentName();
+
+            StudentRow studentRow = null;
+
+            for(StudentRow row : rows){
+                if(row.getStudentID() == studentId){
+                    studentRow = row;
+
+                    break;
+                }
+            }
+
+            if(studentRow == null){
+                studentRow = new StudentRow(studentId, studentName);
+
+                rows.add(studentRow);
+            }
+
+            int weight = 0;
+            int subjectAssessmentID = grade.getSubjectAssessmentID();
+
+            for(Assessment assessment : assessmentList){
+                if(assessment.getSubjectAssessmentID() == subjectAssessmentID){
+                    weight = assessment.getWeight();
+
+                    break;
+                }
+            }
+
+            studentRow.addGrade(grade.getAssessmentName(), grade.getGradeValue(), grade.getGradeID(), weight);
+        }
+
+        for(StudentRow row : rows){
+            row.calculateFinalGrade();
+        }
+
+        studentRows = FXCollections.observableArrayList(rows);
 
         createColumns();
 
         studentGradeTable.setItems(studentRows);
 
-        setupAutoResize();
+        adjustColumnWidths();
     }
 
-    private List<String> extractAssessmentNames(List<StudentGrade> grades){
-        Set<String> unique = new LinkedHashSet<>();
-
-        for(StudentGrade g : grades){
-            unique.add(g.getAssessmentName());
-        }
-
-        return new ArrayList<>(unique);
-    }
-
-    private Map<Integer, StudentRow> groupByStudent(List<StudentGrade> grades){
-        Map<Integer, StudentRow> map = new LinkedHashMap<>();
-
-        for(StudentGrade g : grades){
-            StudentRow row = map.computeIfAbsent(g.getStudentID(), id -> new StudentRow(id, g.getStudentName()));
-            row.addGrade(g.getAssessmentName(), g.getGradeValue(), g.getGradeID());
-        }
-
-        return map;
-    }
-
-    private static final double NAME_COLUMN_PERCENT = 0.20;
-    private static final double FINAL_COLUMN_PERCENT = 0.15;
-    private static final double MIN_COLUMN_WIDTH = 90.0;
-    private static final int MIN_GRADE = 0;
-    private static final int MAX_GRADE = 100;
-
-    private void createColumns(){
+    private void createColumns() {
         studentGradeTable.getColumns().clear();
 
-        TableColumn<StudentRow, String> nameCol = new TableColumn<>("Student Name");
-        nameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStudentName()));
+        TableColumn<StudentRow, String> nameCol = new TableColumn<>("Student");
+        nameCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getStudentName()));
         nameCol.setEditable(false);
         nameCol.setMinWidth(MIN_COLUMN_WIDTH);
         studentGradeTable.getColumns().add(nameCol);
 
         for(String assessment : assessmentNames){
             TableColumn<StudentRow, Integer> col = new TableColumn<>(assessment);
-            col.setCellValueFactory(data -> {
-                Integer grade = data.getValue().getGrades().get(assessment);
-                return new SimpleIntegerProperty(grade != null ? grade : 0).asObject();
+
+            col.setCellValueFactory(d -> {
+                int gradeValue = d.getValue().getGradeForAssessment(assessment);
+
+                return new SimpleIntegerProperty(gradeValue).asObject();
             });
+
             col.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-            col.setOnEditCommit(this::handleGradeEdit);
             col.setEditable(!gradesFinalized);
             col.setMinWidth(MIN_COLUMN_WIDTH);
+
+            col.setOnEditCommit(e -> {
+                int newVal = e.getNewValue();
+
+                if(newVal < MIN_GRADE || newVal > MAX_GRADE){
+                    showWarning("Invalid Grade", "Grade must be 0–100");
+
+                    studentGradeTable.refresh();
+
+                    return;
+                }
+
+                e.getRowValue().updateGrade(assessment, newVal);
+
+                studentGradeTable.refresh();
+            });
 
             studentGradeTable.getColumns().add(col);
         }
 
-        TableColumn<StudentRow, String> finalCol = new TableColumn<>("Final Grade");
-        finalCol.setCellValueFactory(data ->
-                new SimpleStringProperty(String.format("%.2f", data.getValue().getFinalGrade()))
-        );
+        TableColumn<StudentRow, String> finalCol = new TableColumn<>("Final");
+        finalCol.setCellValueFactory(d ->  new SimpleStringProperty(String.format("%.2f", d.getValue().getFinalGrade())));
         finalCol.setEditable(false);
         finalCol.setMinWidth(MIN_COLUMN_WIDTH);
-
         studentGradeTable.getColumns().add(finalCol);
+
+        studentGradeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    private void handleGradeEdit(TableColumn.CellEditEvent<StudentRow, Integer> event){
-        if(gradesFinalized){
-            studentGradeTable.refresh();
+    private void adjustColumnWidths() {
+        int totalColumns = studentGradeTable.getColumns().size();
 
+        if(totalColumns == 0){
             return;
         }
 
-        int newGrade = event.getNewValue();
+        double tableWidth = studentGradeTable.getWidth();
 
-        if(newGrade < MIN_GRADE || newGrade > MAX_GRADE){
-            showError("Invalid Grade", "Grade must be between " + MIN_GRADE + " and " + MAX_GRADE);
-
-            studentGradeTable.refresh();
-
-            return;
+        if(tableWidth <= 0){
+            tableWidth = 800;
         }
 
-        String assessment = event.getTableColumn().getText();
-        StudentRow row = event.getRowValue();
-        row.getGrades().put(assessment, newGrade);
-        row.calculateAverage(assessmentNames, assessmentWeights);
+        double nameColumnWidth = Math.max(MIN_COLUMN_WIDTH, tableWidth * 0.25);
+        double finalColumnWidth = Math.max(MIN_COLUMN_WIDTH, tableWidth * 0.15);
 
-        studentGradeTable.refresh();
-    }
+        int assessmentColumns = totalColumns - 2;
+        double remainingWidth = tableWidth - nameColumnWidth - finalColumnWidth;
 
-    private void setupAutoResize(){
-        if(isTableListenerAdded){
-            return;
+        if(assessmentColumns > 0){
+            double assessmentColumnWidth = Math.max(MIN_COLUMN_WIDTH, remainingWidth / assessmentColumns);
+
+            for(int i = 0; i < totalColumns; i++){
+                TableColumn<?, ?> column = studentGradeTable.getColumns().get(i);
+
+                if(i == 0){
+                    column.setPrefWidth(nameColumnWidth);
+                }else if(i == totalColumns - 1){
+                    column.setPrefWidth(finalColumnWidth);
+                }else{
+                    column.setPrefWidth(assessmentColumnWidth);
+                }
+            }
         }
 
         studentGradeTable.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-            double tableWidth = newWidth.doubleValue();
-            int numCols = studentGradeTable.getColumns().size();
-
-            if(numCols < 2){
-                return;
-            }
-
-            double nameWidth = tableWidth * NAME_COLUMN_PERCENT;
-            double finalWidth = tableWidth * FINAL_COLUMN_PERCENT;
-            double assessmentTotal = tableWidth - nameWidth - finalWidth;
-            double assessmentWidth = assessmentNames.isEmpty() ? 0 : assessmentTotal / assessmentNames.size();
-
-            for(int i = 0; i < numCols; i++){
-                TableColumn<?, ?> col = studentGradeTable.getColumns().get(i);
-
-                if(i == 0){
-                    col.setPrefWidth(Math.max(MIN_COLUMN_WIDTH, nameWidth));
-                }else if(i == numCols - 1){
-                    col.setPrefWidth(Math.max(MIN_COLUMN_WIDTH, finalWidth));
-                }else{
-                    col.setPrefWidth(Math.max(MIN_COLUMN_WIDTH, assessmentWidth));
-                }
+            if(newWidth.doubleValue() > 0){
+                adjustColumnWidthsOnResize(newWidth.doubleValue());
             }
         });
-
-        isTableListenerAdded = true;
     }
 
-    private void saveGrades(){
-        if(gradesFinalized){
-            showWarning("Grades Finalized", "Cannot edit finalized grades.");
+    private void adjustColumnWidthsOnResize(double newWidth) {
+        int totalColumns = studentGradeTable.getColumns().size();
 
+        if(totalColumns == 0){
+            return;
+        }
+
+        double nameColumnWidth = Math.max(MIN_COLUMN_WIDTH, newWidth * 0.25);
+        double finalColumnWidth = Math.max(MIN_COLUMN_WIDTH, newWidth * 0.15);
+
+        int assessmentColumns = totalColumns - 2;
+        double remainingWidth = newWidth - nameColumnWidth - finalColumnWidth;
+
+        if(assessmentColumns > 0 && remainingWidth > 0){
+            double assessmentColumnWidth = Math.max(MIN_COLUMN_WIDTH, remainingWidth / assessmentColumns);
+
+            for(int i = 0; i < totalColumns; i++){
+                TableColumn<?, ?> column = studentGradeTable.getColumns().get(i);
+
+                if(i == 0){
+                    column.setPrefWidth(nameColumnWidth);
+                }else if(i == totalColumns - 1){
+                    column.setPrefWidth(finalColumnWidth);
+                }else{
+                    column.setPrefWidth(assessmentColumnWidth);
+                }
+            }
+        }
+    }
+
+
+    private void saveGrades() {
+        if(gradesFinalized){
             return;
         }
 
         try {
             DatabaseConnection database = new DatabaseConnection();
 
-            int updatedCount = 0;
+            int count = 0;
 
             for(StudentRow row : studentRows){
-                for(String assessment : assessmentNames){
-                    Integer gradeID = row.getGradeIDs().get(assessment);
-                    Integer gradeValue = row.getGrades().get(assessment);
+                for(StudentRow.GradeData grade : row.getGrades()){
+                    database.updateGrade(grade.gradeID(), grade.gradeValue());
 
-                    if(gradeID != null && gradeValue != null){
-                        database.updateGrade(gradeID, gradeValue);
-
-                        updatedCount++;
-                    }
+                    count++;
                 }
             }
 
-            showInfo("Success", "Updated " + updatedCount + " grade(s) successfully.");
+            showInfo("Saved", count + " grades updated.");
 
-            loadGradesForSelectedSubject();
-
+            loadGrades();
         } catch (Exception e) {
-            showError("Error Saving Grades", "Grades could not  be saved!");
+            showError("Save Error", "Could not save grades.");
+
+            e.printStackTrace();
         }
     }
 
-    private void finalized(){
+    private void finalizeGrades() {
         String subject = subjectComboBox.getValue();
 
-        if(subject == null || subject.trim().isEmpty()){
-            showWarning("No Subject Selected", "Please select a subject first.");
-
-            return;
-        }
-
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Finalize Grades");
-        confirm.setHeaderText("Finalize grades for " + subject + "?");
-        confirm.setContentText("This action cannot be undone. Grades will be locked.");
-
-        if(confirm.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK){
+        if(subject == null){
             return;
         }
 
         try {
             DatabaseConnection database = new DatabaseConnection();
 
-            int subjectID = database.getSubjectIDByName(subject);
+            database.finalizeGradesForSubject(database.getSubjectIDByName(subject));
 
-            database.finalizeGradesForSubject(subjectID);
+            showInfo("Finalized", "Grades finalized.");
 
-            showInfo("Success", "Grades have been finalized.");
-
-            loadGradesForSelectedSubject();
+            loadGrades();
         } catch (Exception e) {
-            showError("Error Finalizing Grades", "Grades couldn't be finalized!");
+            showError("Finalize Error", "Failed to finalize grades.");
         }
     }
 
-    private void clearTable(){
-        studentGradeTable.getColumns().clear();
+    private void clearTable() {
         studentGradeTable.getItems().clear();
+        studentGradeTable.getColumns().clear();
     }
 
-    private void updateUIState(){
+    private void updateUI() {
         studentGradeTable.setEditable(!gradesFinalized);
         submitButton.setDisable(gradesFinalized);
         finalizeButton.setDisable(gradesFinalized);
     }
 
-    private void showError(String title, String message){
-        showAlert(title, message, Alert.AlertType.ERROR);
+    private void showError(String t, String m) {
+        new Alert(Alert.AlertType.ERROR, m).showAndWait();
     }
 
-    private void showWarning(String title, String message){
-        showAlert(title, message, Alert.AlertType.WARNING);
+    private void showWarning(String t, String m) {
+        new Alert(Alert.AlertType.WARNING, m).showAndWait();
     }
 
-    private void showInfo(String title, String message){
-        showAlert(title, message, Alert.AlertType.INFORMATION);
-    }
-
-    private void showAlert(String title, String message, Alert.AlertType type){
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void showInfo(String t, String m) {
+        new Alert(Alert.AlertType.INFORMATION, m).showAndWait();
     }
 }

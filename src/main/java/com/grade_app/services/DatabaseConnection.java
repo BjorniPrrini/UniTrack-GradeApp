@@ -639,23 +639,22 @@ public class DatabaseConnection {
         return false;
     }
 
-    public Map<String, Integer> getAssessmentWeightsForSubject(int subjectID) throws SQLException {
-
-        String sql = "SELECT a.assessmentName, sa.weight FROM Subject_Assessments sa JOIN Assessments a ON sa.assessmentID = a.assessmentID WHERE sa.subjectID = ? AND sa.active = 1";
+    public List<Assessment> getAssessmentWeightsForSubject(int subjectID) throws SQLException {
+        String sql = "SELECT Subject_Assessments.subjectAssessmentID, Assessments.assessmentName, Subject_Assessments.weight, 0 as gradeValue FROM Subject_Assessments, Assessments WHERE Subject_Assessments.assessmentID = Assessments.assessmentID AND Subject_Assessments.subjectID = ? AND Subject_Assessments.active = 1 ORDER BY Subject_Assessments.subjectAssessmentID";
 
         PreparedStatement statement = connection.prepareStatement(sql);
 
         statement.setInt(1, subjectID);
 
-        ResultSet result = statement.executeQuery();
+        List<Assessment> assessments = new ArrayList<>();
 
-        Map<String, Integer> weights = new HashMap<>();
-
-        while(result.next()){
-            weights.put(result.getString("assessmentName"), result.getInt("weight"));
+        try(ResultSet result = statement.executeQuery()){
+            while(result.next()){
+                assessments.add(new Assessment(result.getInt("subjectAssessmentID"), result.getString("assessmentName"), result.getInt("weight"), result.getInt("gradeValue")));
+            }
         }
 
-        return weights;
+        return assessments;
     }
 
     public boolean changePassword(String email, String oldPassword, String newPassword){

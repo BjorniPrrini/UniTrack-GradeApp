@@ -1,76 +1,84 @@
 package com.grade_app.model;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class StudentRow {
     private final int studentID;
     private final String studentName;
-    private final Map<String, Integer> grades;
-    private final Map<String, Integer> gradeIDs;
+    private final List<GradeData> grades = new ArrayList<>();
     private double finalGrade;
 
     public StudentRow(int studentID, String studentName){
         this.studentID = studentID;
         this.studentName = studentName;
-        this.grades = new HashMap<>();
-        this.gradeIDs = new HashMap<>();
-        this.finalGrade = 0.0;
     }
 
-    public int getStudentID(){
+    public int getStudentID() {
         return studentID;
     }
 
-    public String getStudentName(){
+    public String getStudentName() {
         return studentName;
     }
 
-    public Map<String, Integer> getGrades(){
+    public List<GradeData> getGrades() {
         return grades;
     }
 
-    public Map<String, Integer> getGradeIDs(){
-        return gradeIDs;
-    }
-
-    public double getFinalGrade(){
+    public double getFinalGrade() {
         return finalGrade;
     }
 
-    public void addGrade(String assessmentName, int gradeValue, int gradeID){
-        grades.put(assessmentName, gradeValue);
-        gradeIDs.put(assessmentName, gradeID);
+    public void addGrade(String assessmentName, int gradeValue, int gradeID, int weight) {
+        grades.add(new GradeData(assessmentName, gradeID, gradeValue, weight));
     }
 
-    public void calculateAverage(List<String> assessmentNames, Map<String, Integer> assessmentWeights){
-        double weightedSum = 0.0;
-        int totalWeight = 0;
-
-        for(String assessment : assessmentNames){
-            Integer grade = grades.get(assessment);
-
-            if(grade != null){
-                int weight = assessmentWeights.getOrDefault(assessment, 0);
-
-                weightedSum += grade * weight;
-                totalWeight += weight;
+    public int getGradeForAssessment(String assessmentName) {
+        for(GradeData grade : grades){
+            if(grade.assessmentName().equals(assessmentName)){
+                return grade.gradeValue();
             }
         }
 
-        if(totalWeight > 0){
-            finalGrade = weightedSum / totalWeight;
-        }else{
-            finalGrade = 0.0;
+        return 0;
+    }
+
+    public Integer getGradeIDForAssessment(String assessmentName) {
+        for(GradeData grade : grades){
+            if(grade.assessmentName().equals(assessmentName)){
+                return grade.gradeID();
+            }
         }
+
+        return null;
     }
 
-    public int getGradeForAssessment(String assessmentName){
-        return grades.getOrDefault(assessmentName, 0);
+    public void updateGrade(String assessmentName, int newValue) {
+        for(int i = 0; i < grades.size(); i++){
+            GradeData grade = grades.get(i);
+
+            if(grade.assessmentName().equals(assessmentName)){
+                grades.set(i, new GradeData(grade.assessmentName(), grade.gradeID(), newValue, grade.weight()));
+
+                break;
+            }
+        }
+
+        calculateFinalGrade();
     }
 
-    public Integer getGradeIDForAssessment(String assessmentName){
-        return gradeIDs.get(assessmentName);
+    public void calculateFinalGrade() {
+        double sum = 0;
+        int weightSum = 0;
+
+        for(GradeData grade : grades){
+            sum += grade.gradeValue() * grade.weight();
+            weightSum += grade.weight();
+        }
+
+        finalGrade = weightSum > 0 ? sum / weightSum : 0.0;
     }
+
+    public record GradeData(String assessmentName, int gradeID, int gradeValue, int weight) {}
 }
