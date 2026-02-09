@@ -150,7 +150,7 @@ public class StudentGradesController {
     }
 
     private Label createFinalGradeLabel(double finalGrade){
-        Label label = createLabel("Final Grade: " + String.format("%.2f", finalGrade) + " / 100");
+        Label label = createLabel("Final Grade: " + String.format("%.2f", finalGrade) + " / 100 - " + getGradeLetter(finalGrade));
 
         String color = getGradeColor(finalGrade);
 
@@ -175,6 +175,28 @@ public class StudentGradesController {
             return "#f44336";
         }else{
             return "#ff9800";
+        }
+    }
+
+    private String getGradeLetter(double finalGrade){
+        if(finalGrade <= 100 && finalGrade >= 90){
+            return "AA";
+        }else if(finalGrade <= 89 && finalGrade >= 85){
+            return "BA";
+        }else if(finalGrade <= 84 && finalGrade >= 80){
+            return "BB";
+        }else if(finalGrade <= 79 && finalGrade >= 75){
+            return "CB";
+        }else if(finalGrade <= 74 && finalGrade >= 70){
+            return "CC";
+        }else if(finalGrade <= 69 && finalGrade >= 65){
+            return "DC";
+        }else if(finalGrade <= 64 && finalGrade >= 60){
+            return "DD";
+        }else if(finalGrade <= 59 && finalGrade >= 50){
+            return "FD";
+        }else{
+            return "FF";
         }
     }
 

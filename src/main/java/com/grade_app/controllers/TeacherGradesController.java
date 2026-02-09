@@ -231,6 +231,12 @@ public class TeacherGradesController {
         finalCol.setMinWidth(MIN_COLUMN_WIDTH);
         studentGradeTable.getColumns().add(finalCol);
 
+        TableColumn<StudentRow, String> gradeLetterCol = new TableColumn<>("Grade");
+        gradeLetterCol.setCellValueFactory(e ->  new SimpleStringProperty(e.getValue().getLetterGrade()));
+        gradeLetterCol.setEditable(false);
+        gradeLetterCol.setMinWidth(MIN_COLUMN_WIDTH);
+        studentGradeTable.getColumns().add(gradeLetterCol);
+
         studentGradeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
