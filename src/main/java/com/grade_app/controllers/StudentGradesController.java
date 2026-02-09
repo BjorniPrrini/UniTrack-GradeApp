@@ -106,20 +106,14 @@ public class StudentGradesController {
 
     private VBox createSubjectCard(Subject subject, int studentID, DatabaseConnection database) throws SQLException{
         VBox subjectCard = new VBox(8);
-        subjectCard.setStyle(
-                "-fx-border-color: #c0875c; -fx-border-width: 2; -fx-padding: 15; -fx-background-color: #E9C68A; -fx-background-radius: 5; -fx-border-radius: 5;"
-        );
+        subjectCard.setStyle("-fx-border-color: #c0875c; -fx-border-width: 2; -fx-padding: 15; -fx-background-color: #E9C68A; -fx-background-radius: 5; -fx-border-radius: 5;");
 
         Label subjectLabel = createLabel(subject.getName());
-        subjectLabel.setStyle(
-                subjectLabel.getStyle() + "-fx-font-size: 18px; -fx-font-weight: bold; -fx-background-color: #c0875c; -fx-text-fill: white; -fx-border-color: white;"
-        );
+        subjectLabel.setStyle(subjectLabel.getStyle() + "-fx-font-size: 18px; -fx-font-weight: bold; -fx-background-color: #c0875c; -fx-text-fill: white; -fx-border-color: white;");
         subjectCard.getChildren().add(subjectLabel);
 
         Label assessmentsHeader = createLabel("Assessments:");
-        assessmentsHeader.setStyle(
-                assessmentsHeader.getStyle() + "-fx-font-weight: bold; -fx-background-color: white; -fx-border-color:#c0875c; -fx-border-width: 2;"
-        );
+        assessmentsHeader.setStyle(assessmentsHeader.getStyle() + "-fx-font-weight: bold; -fx-background-color: white; -fx-border-color:#c0875c; -fx-border-width: 2;");
         subjectCard.getChildren().add(assessmentsHeader);
 
         List<Assessment> assessments = database.getAssessmentsForStudent(studentID, subject.getId());
@@ -131,9 +125,7 @@ public class StudentGradesController {
             int grade = assessment.getGradeValue();
             int weight = assessment.getWeight();
 
-            Label assessmentLabel = createLabel(
-                    assessment.getName() + " (Weight: " + weight + "%) - " + grade + " / 100"
-            );
+            Label assessmentLabel = createLabel(assessment.getName() + " (Weight: " + weight + "%) - " + grade + " / 100");
             subjectCard.getChildren().add(assessmentLabel);
 
             totalWeightedGrade += (grade * weight);
@@ -152,8 +144,7 @@ public class StudentGradesController {
     private Label createLabel(String text){
         Label label = new Label(text);
 
-        label.setStyle("-fx-border-color: #c0875c; -fx-border-width: 1; -fx-padding: 8; -fx-background-color: white; -fx-border-radius: 3; -fx-background-radius: 3;"
-        );
+        label.setStyle("-fx-border-color: #c0875c; -fx-border-width: 1; -fx-padding: 8; -fx-background-color: white; -fx-border-radius: 3; -fx-background-radius: 3;");
 
         return label;
     }
@@ -163,9 +154,7 @@ public class StudentGradesController {
 
         String color = getGradeColor(finalGrade);
 
-        label.setStyle(
-                label.getStyle() + "-fx-font-weight: bold; -fx-font-size: 16px; " + "-fx-background-color: " + color + "; " +  "-fx-text-fill: white; -fx-border-color: " + darkenColor(color) + ";"
-        );
+        label.setStyle(label.getStyle() + "-fx-font-weight: bold; -fx-font-size: 16px; -fx-background-color: " + color + "; -fx-text-fill: white; -fx-border-color: " + darkenColor(color) + ";");
 
         return label;
     }
@@ -175,7 +164,7 @@ public class StudentGradesController {
     private static final double pass = 60.0;
     private static final double fail = 50.0;
 
-    private String getGradeColor(double grade) {
+    private String getGradeColor(double grade){
         if(grade >= excellent){
             return "#4caf50";
         }else if(grade >= good){

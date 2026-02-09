@@ -68,6 +68,7 @@ public class TeacherGradesController {
     @FXML
     public void initialize() {
         studentGradeTable.setEditable(true);
+
         loadSubjects();
 
         subjectComboBox.setOnAction(e -> loadGrades());
@@ -305,7 +306,7 @@ public class TeacherGradesController {
         }
     }
 
-
+    @FXML
     private void saveGrades() {
         if(gradesFinalized){
             return;
@@ -334,6 +335,7 @@ public class TeacherGradesController {
         }
     }
 
+    @FXML
     private void finalizeGrades() {
         String subject = subjectComboBox.getValue();
 
