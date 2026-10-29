@@ -74,7 +74,7 @@ CREATE TABLE Subject_Assessments (
     active TINYINT(1) NOT NULL DEFAULT 1,
     PRIMARY KEY (subjectAssessmentID),
     UNIQUE KEY uq_sa_subject_assessment (subjectID, assessmentID),
-    CONSTRAINT fk_sa_subject    FOREIGN KEY (subjectID)    REFERENCES Subjects(subjectID)       ON DELETE CASCADE,
+    CONSTRAINT fk_sa_subject FOREIGN KEY (subjectID) REFERENCES Subjects(subjectID) ON DELETE CASCADE,
     CONSTRAINT fk_sa_assessment FOREIGN KEY (assessmentID) REFERENCES Assessments(assessmentID) ON DELETE CASCADE
 )
 
