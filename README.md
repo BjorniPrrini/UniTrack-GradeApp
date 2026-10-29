@@ -8,7 +8,7 @@ The application serves three roles:
 - **Teacher** — selects one of the subjects assigned to them, enters integer grades for every enrolled student, saves them, and finalizes the grades for the subject.
 - **Student** — sees the subjects of their course up to their current year, the grade for each assessment, the weighted final grade, and a letter grade.
 
-This README documents the repository as it exists in source. Exact behavior is enforced by the implementation; where configuration is environment-specific, examples use placeholders rather than embedding credentials. The data-access reference is based on the methods and SQL statements in this repository. It was written by reading the source, not by running the application, so it is not a substitute for tests against a running instance. **The repository does not include a database schema script**; the schema described in [Persistence model](#persistence-model) is inferred from the SQL in the code. Places where the source behaves differently from what a reader might expect are called out in [Known limitations and behaviours to verify](#known-limitations-and-behaviours-to-verify).
+This README documents the repository as it exists in source. Exact behavior is enforced by the implementation; where configuration is environment-specific, examples use placeholders rather than embedding credentials. The data-access reference is based on the methods and SQL statements in this repository. It was written by reading the source, not by running the application, so it is not a substitute for tests against a running instance. The database schema lives in **`grade_app.sql`** at the repository root. The original script was lost, so this one was reconstructed from the SQL statements in the code and tested against MariaDB; see [Database setup](#database-setup) and [Persistence model](#persistence-model). Places where the source behaves differently from what a reader might expect are called out in [Known limitations and behaviours to verify](#known-limitations-and-behaviours-to-verify).
 
 ---
 
@@ -129,6 +129,7 @@ There is no network API between the screens and the database. Each controller cr
 GradeApp/
 ├── pom.xml                              Maven build: JavaFX, ControlsFX, MariaDB, dotenv, jBCrypt, JUnit
 ├── mvnw, mvnw.cmd, .mvn/wrapper/        Maven wrapper
+├── grade_app.sql                        Database schema and first-admin seed (run this first)
 ├── .env                                 Local DB settings (not committed; see .gitignore)
 ├── .gitignore
 └── src/main/
@@ -171,16 +172,23 @@ The module descriptor also contains `requires kotlin.stdlib;`. The code is pure 
 
 ### Database setup
 
-Create a database and a dedicated local user. Choose your own password; do not reuse one from an old local configuration.
+The repository ships **`grade_app.sql`**, which creates the `Grade_App` database, all nine tables with their keys, and one starting admin account. Run it as a MariaDB user that is allowed to create databases (for example `root`):
+
+```bash
+mariadb -u root -p < grade_app.sql
+```
+
+Then create a dedicated local user for the application. Choose your own password; do not reuse one from an old local configuration.
 
 ```sql
-CREATE DATABASE unitrack CHARACTER SET utf8mb4;
 CREATE USER 'unitrack_user'@'localhost' IDENTIFIED BY 'replace_with_a_strong_local_password';
-GRANT ALL PRIVILEGES ON unitrack.* TO 'unitrack_user'@'localhost';
+GRANT ALL PRIVILEGES ON Grade_App.* TO 'unitrack_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-Then create the tables. **The repository contains no schema script**, so use the schema from your own database or build it from [Persistence model](#persistence-model). Adding a `schema.sql` (tables, constraints, seed course data, and a first admin) to the repository is strongly recommended so anyone can build a working database.
+The script is safe to run **once on an empty server**. It uses plain `CREATE TABLE` (no `IF NOT EXISTS`), so running it again on an existing `Grade_App` database fails instead of overwriting data. To start over, drop the database first.
+
+> **Reconstructed schema.** The original script was lost and `grade_app.sql` was rebuilt from the queries in `DatabaseConnection.java`. Column types, sizes, and constraints are therefore reasonable choices that the code works with, not a copy of the first database. If an old copy of the real database ever turns up, compare it with this script before relying on either.
 
 The application never creates or migrates tables. If a table or column is missing, the SQL statement fails, the exception is printed with `printStackTrace()`, and the screen usually shows an empty list or a generic error.
 
@@ -202,16 +210,23 @@ If you already have the repository locally, use `git pull` on the intended branc
 Create a file named `.env` in the **project root** (next to `pom.xml`). `ConnectionProvider` uses `Dotenv.load()`, which looks in the current working directory, so start the application from that directory.
 
 ```properties
-DB_URL=jdbc:mariadb://localhost:3306/unitrack
+DB_URL=jdbc:mariadb://localhost:3306/Grade_App
 DB_USER=unitrack_user
 DB_PASS=replace_with_your_local_password
 ```
 
 `.env` is already listed in `.gitignore`. Consider committing a `.env.example` with placeholders so teammates know the keys.
 
-### 3. Create the schema and a first admin
+### 3. Create the schema and the first admin
 
-Create the tables ([Database setup](#database-setup)) and insert at least one admin user whose `password` column holds a **BCrypt hash**. The registration screen is only reachable after logging in as an admin, so the first admin must be inserted directly in the database. Generate the hash with any BCrypt tool, or with the same `jbcrypt` library the application uses.
+Run `grade_app.sql` as described in [Database setup](#database-setup). Besides the tables, it inserts one admin so you can log in:
+
+| Field | Value |
+|---|---|
+| Email | `admin@gmail.com` |
+| Temporary password | `ChangeMe123` |
+
+The password is stored as a BCrypt hash in the `$2a$` format that `jbcrypt` accepts. **Change it right after the first login** with the password screen. The registration screen is only reachable after logging in as an admin, which is why this account is seeded.
 
 ### 4. Build
 
@@ -227,7 +242,7 @@ Create the tables ([Database setup](#database-setup)) and insert at least one ad
 
 ### 6. Verify
 
-The login window (title "UniTrack", fixed size, not resizable) should open. Sign in as the admin and confirm that the registration screen appears.
+The login window (title "UniTrack", fixed size, not resizable) should open. Sign in as `admin@gmail.com` with the temporary password from step 3 and confirm that the registration screen appears. Then change that password.
 
 ---
 
@@ -237,7 +252,7 @@ The login window (title "UniTrack", fixed size, not resizable) should open. Sign
 
 | Variable | Purpose | Required? | Notes |
 |---|---|---|---|
-| `DB_URL` | JDBC URL | Yes | For example `jdbc:mariadb://localhost:3306/unitrack`. |
+| `DB_URL` | JDBC URL | Yes | For example `jdbc:mariadb://localhost:3306/Grade_App`. The database name must match the one created by `grade_app.sql`. |
 | `DB_USER` | Database login | Yes | Prefer a dedicated least-privilege user. |
 | `DB_PASS` | Database password | Yes | Never commit the real value. |
 
@@ -294,11 +309,11 @@ The POM declares JUnit Jupiter, but the repository contains **no test sources** 
 
 ## Quick start for testers
 
-1. Create the MariaDB database, the tables, and a first admin ([Database setup](#database-setup)).
+1. Run `grade_app.sql` to create the `Grade_App` database, the tables, and the first admin ([Database setup](#database-setup)).
 2. Create `.env` in the project root.
 3. Run `./mvnw javafx:run` from the project root.
-4. Log in as the admin. The registration screen opens.
-5. Register a **teacher**: enter name and surname, choose role `teacher`, choose a course and a subject. The generated email and password appear on the screen; note them.
+4. Log in as the seeded admin (`admin@gmail.com`). The registration screen opens.
+5. Add at least one course, its subjects, and each subject's year to the database (the application has no screen for this; use SQL, or the commented sample block at the bottom of `grade_app.sql`). Then register a **teacher**: enter name and surname, choose role `teacher`, choose a course and a subject. The generated email and password appear on the screen; note them.
 6. Open **Subjects** and enable assessments with weights for that subject (for example Midterm 40, Final 60).
 7. Register a **student**: choose role `student`, a course, and a year. Grade rows for the active assessments of that course's subjects for that year are created with value 0.
 8. Log out and log in as the teacher. Pick the subject, enter grades, press Save, then Finalize.
@@ -487,7 +502,7 @@ Invisible `~~~` links only guide layout; they are not runtime dependencies.
 | `getUser` | email | `User` or `Student` or `null` | `Users` | Loads the profile; builds a `Student` (with `year`) when the role is `student`. |
 | `getAllUsers` | none | `List<User>` | `Users` | All users, no password. |
 | `searchUser` | name, surname | `User` or `null` | `Users` | First user with the exact name and surname. |
-| `deleteUser` | name, surname | `boolean` | `Users` | Deletes **every** user with that name and surname; related rows depend on the schema's foreign keys. |
+| `deleteUser` | name, surname | `boolean` | `Users` | Deletes **every** user with that name and surname. Their `Course_Student`, `Teacher_Subject`, and `Grades` rows are removed by `ON DELETE CASCADE` in `grade_app.sql`. |
 | `changePassword` | email, old password, new password | `boolean` | `Users` | Verifies the old password, then stores the new BCrypt hash. The `UPDATE` statement is executed twice in the code. |
 | `adminRegister` | name, surname, email, password, role, year, course, subject | `boolean` | `Users`, `Teacher_Subject`, `Course_Student`, `Grades` | Hashes the password and inserts the user. Teachers get a `Teacher_Subject` row; students get a `Course_Student` row and zero-valued `Grades` rows for active assessments of their course's subjects for the chosen year. |
 
@@ -522,11 +537,11 @@ Invisible `~~~` links only guide layout; they are not runtime dependencies.
 
 ## Persistence model
 
-The database schema is **inferred from the SQL statements** in `DatabaseConnection`. Column types and constraints are not visible in the source; the "Used as" column states how the Java code treats each column.
+The schema is defined in `grade_app.sql`. That script was **reconstructed from the SQL statements** in `DatabaseConnection` after the original was lost, so the types and constraints are the ones the code needs rather than a copy of the first database. The table below states how the Java code uses each column.
 
 | Table | Columns used by the code | Responsibility |
 |---|---|---|
-| `Users` | `userID` (int, generated), `name`, `surname`, `email`, `password` (BCrypt hash), `role` (`admin`, `teacher`, `student`), `year` (students only) | Every account. Email is used as the login key, so it should be unique. |
+| `Users` | `userID` (int, generated), `name`, `surname`, `email`, `password` (BCrypt hash), `role` (`admin`, `teacher`, `student`), `year` (students only) | Every account. Email is the login key and has a `UNIQUE` constraint. `year` is `NULL` for admins and teachers. |
 | `Courses` | `courseID`, `courseName`, `duration` (int) | Degree programs; `duration` drives the year selector. |
 | `Subjects` | `subjectID`, `subjectName`, `credits` (int) | Subjects. Names are used as lookup keys. |
 | `Course_Subjects` | `courseID`, `subjectID`, `subjectYear` | Which subject belongs to which course and in which year. |
@@ -604,7 +619,15 @@ erDiagram
     }
 ```
 
-This ER view is conceptual: exact keys, cardinalities, cascade behaviour, and uniqueness constraints must be read from your real database. In particular, check what happens to `Course_Student`, `Teacher_Subject`, and `Grades` rows when a user is deleted, because `deleteUser` only issues a `DELETE` on `Users`.
+### Constraints defined in `grade_app.sql`
+
+- **Unique values:** `Users.email`, `Courses.courseName`, `Subjects.subjectName`, and `Assessments.assessmentName`. Each pair `(subjectID, assessmentID)` in `Subject_Assessments` and each pair `(studentID, subjectAssessmentID)` in `Grades` can appear only once.
+- **Composite keys:** `Course_Subjects (courseID, subjectID)`, `Course_Student (studentID, courseID)`, and `Teacher_Subject (teacherID, subjectID, courseID)`.
+- **Foreign keys with `ON DELETE CASCADE`:** deleting a user removes their enrolment, teaching assignments, and grades; deleting a course, subject, or subject-assessment removes the rows that depend on it. `deleteUser` only issues a `DELETE` on `Users`, so this cascade is what keeps the other tables clean.
+- **Defaults:** `Subject_Assessments.active` defaults to `1`, `Grades.gradeValue` to `0`, and `Grades.finalized` to `0`.
+- **Roles:** `Users.role` is an `ENUM('admin', 'teacher', 'student')`.
+
+The ER diagram above is conceptual; `grade_app.sql` is the authority for exact column types.
 
 ---
 
@@ -760,12 +783,12 @@ These observations come from reading the source. Each is something a reviewer or
 | 4 | Grade rows are created for a student **at registration time**, only for assessments that are active then. Assessments activated later, or a student promoted to a new year, may have no grade rows unless something else creates them; the student view then shows `0` for missing rows. | `adminRegister`, `getAssessmentsForStudent` |
 | 5 | `deleteUser` removes all users with the same name and surname, not one specific user. Identical names (also possible for the generated email) would delete several accounts. | `DatabaseConnection.deleteUser`, `AdminDeleteController` |
 | 6 | `searchUser` returns the first match for a name and surname; with duplicate names the wrong person may be found. | `DatabaseConnection.searchUser` |
-| 7 | Duplicate email handling relies on the database. A duplicate generated email makes the insert fail and the UI shows a generic error. | `adminRegister`, `AdminRegisterController` |
+| 7 | A duplicate generated email is rejected by the `UNIQUE` constraint on `Users.email`, so the insert fails and the UI shows a generic error. | `adminRegister`, `AdminRegisterController` |
 | 8 | A database error is usually swallowed: the exception is printed to the console and the method returns an empty value. Users may see an empty list rather than an error. | `DatabaseConnection` |
 | 9 | `ConnectionProvider` caches a single static `Connection` forever; there is no reconnect if it times out and no connection closing. | `ConnectionProvider` |
 | 10 | `changePassword` executes the same `UPDATE` twice and returns the result of the second execution. | `DatabaseConnection.changePassword` |
 | 11 | The new-password field in the password screen is a plain `TextField`, so the typed value is visible. | `PasswordChanger.fxml`, `PasswordChangerController` |
-| 12 | Teachers are matched to a subject by **name** (`getSubjectIDByName`), so two subjects with the same name in different courses collide. `submitAssignedSubject` also picks the course with a sub-query on `Course_Subjects` by subject id only. | `DatabaseConnection` |
+| 12 | Teachers are matched to a subject by **name** (`getSubjectIDByName`). The schema keeps subject names unique, so two subjects cannot share a name, even in different courses. `submitAssignedSubject` also picks the course with a sub-query on `Course_Subjects` by subject id only, which fails if a subject is ever linked to two courses. | `DatabaseConnection` |
 | 13 | `Finalize` always shows "Grades finalized." even when `finalizeGradesForSubject` updated zero rows or failed, because the return value is ignored. | `TeacherGradesController.finalizeGrades` |
 | 14 | `AdminDeleteController`, `AdminAssignController`, and others re-create `DatabaseConnection` instances repeatedly; combined with the shared static connection this is a possible source of state and concurrency problems when tests run in parallel. | Controllers |
 | 15 | `usedEmails.txt` is stored relative to the working directory and contains real email addresses; it is not listed in `.gitignore`. | `LoginController`, `.gitignore` |
@@ -813,16 +836,21 @@ The project has no automated tests today, so everything below is a starting poin
 - Check that MariaDB is running and that the JDBC URL, user, and password are correct.
 
 ### Login always fails
+- On a fresh database, use the seeded admin: `admin@gmail.com` with the temporary password from [Initial setup](#initial-setup).
 - Make sure the `Users.password` value is a valid BCrypt hash (`$2a$...`), not plain text.
 - Check the email for case or whitespace differences; the form trims whitespace.
 
 ### Registration shows an error or nothing happens
-- The generated email may already exist; the database rejects duplicates. Use a different name and surname combination.
+- The generated email may already exist; the `UNIQUE` constraint on `Users.email` rejects duplicates. Use a different name and surname combination.
+- For a student or teacher, the course and its subjects must already exist in the database (see Quick start step 5).
 - Check the console for the SQL exception text.
 
 ### A student sees all grades as `0` or no subjects
 - Grade rows are created at registration for active assessments only. Activate the assessments first, then register the student, or create the missing `Grades` rows.
 - Subjects appear only when `Course_Subjects.subjectYear` is less than or equal to the student's year and the student has a `Course_Student` row.
+
+### The course or subject lists are empty on the registration screen
+- The application cannot create courses or subjects. Insert them with SQL (see the sample block at the bottom of `grade_app.sql`).
 
 ### The teacher's subject list is empty
 - The subject must be assigned in `Teacher_Subject` (use the Assign screen).
@@ -844,6 +872,7 @@ The project has no automated tests today, so everything below is a starting poin
 
 ## Security and deployment notes
 
+- **Change the seeded admin password.** `grade_app.sql` creates `admin@gmail.com` with a known temporary password. Change it on first login and never leave it in place on a shared or public database.
 - **Rotate exposed secrets.** The supplied archive contained a `.env` file and IDE data-source metadata. Revoke or rotate any real database credentials found there, never commit `.env`, and exclude `.idea/` from version control.
 - **Do not publish `usedEmails.txt`.** It stores real addresses collected at login; add it to `.gitignore` and ship an empty file or none.
 - **Generated passwords are predictable** (name, surname, two-digit year) and are shown on the registration screen. Replace them with random one-time passwords and force a change at first login.
@@ -853,7 +882,7 @@ The project has no automated tests today, so everything below is a starting poin
 - **Hash handling is correct in principle** (BCrypt with a per-password salt via `gensalt`); keep it that way, and add minimum length and complexity rules.
 - **Mask the new-password field** and add confirmation.
 - **Make grade changes auditable.** Record who changed a grade and when, and consider a controlled "reopen grades" process instead of permanent finalization.
-- **Add a schema and migration process** (for example Flyway or Liquibase) and commit it with the code.
+- **Keep the schema script in version control** (`grade_app.sql` is the starting point) and consider a migration tool such as Flyway or Liquibase once the schema starts to change.
 - **Add automated tests and CI.** See [Testing notes](#testing-notes).
 
 ---
