@@ -1,6 +1,6 @@
 # UniTrack — Desktop Grade Management Application
 
-UniTrack (the project is named `GradeApp` in the repository) is a desktop application for managing university courses, subjects, and student grades. It is a single JavaFX program that talks directly to a MariaDB database over JDBC. There is no separate server: every screen is an FXML view with a controller, and all database access goes through one data-access class.
+UniTrack is a desktop application for managing university courses, subjects, and student grades. It is a single JavaFX program that talks directly to a MariaDB database over JDBC. There is no separate server: every screen is an FXML view with a controller, and all database access goes through one data-access class.
 
 The application serves three roles:
 
